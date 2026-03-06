@@ -1,1 +1,120 @@
-/* You can add global styles to this file, and also import other style files */
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+
+@use '@angular/material' as mat;
+@use 'sass:map';
+// @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+
+@include mat.core();
+
+@mixin app-surface($base) {
+  --app-base-surface: #{$base};
+  --mat-sidenav-content-background-color: color-mix(in srgb, var(--app-base-surface) 97%, white);
+  --mat-card-elevated-container-color: color-mix(in srgb, var(--app-base-surface) 95%, white);
+}
+
+@mixin app-theme($name, $palette, $surface) {
+
+  $theme: mat.define-theme((
+    color: (
+      theme-type: dark,
+      primary: $palette
+    )
+  ));
+
+  body.#{$name} {
+    @include mat.all-component-themes($theme);
+    @include app-surface($surface);
+  }
+
+}
+
+$themes: (
+  blue-theme: (palette: mat.$blue-palette, surface: #141417),
+  rose-theme: (palette: mat.$red-palette, surface: #171110),
+  green-theme: (palette: mat.$green-palette, surface: #101610),
+  cyan-theme: (palette: mat.$cyan-palette, surface: #0f1515),
+  black-theme: (palette: mat.$blue-palette, surface: #000000)
+);
+
+@each $name, $config in $themes {
+  @include app-theme(
+    $name,
+    map.get($config, palette),
+    map.get($config, surface)
+  );
+}
+
+:root {
+  // --primary-color: #f43f5e;      /* default rose */
+  // --on-primary-color: #ffffff;
+  // --accent-color: #ec4899;
+  // --on-accent-color: #ffffff;
+  // --background-color: #212121;
+  // --darker-bg-color: #171717;
+  // --surface-color: #1e1e1e;
+  // --on-surface-color: #ffffff;
+
+  // --mdc-theme-primary
+  // --mdc-theme-on-primary
+  // --mat-sys-surface
+  // --mat-sys-on-surface
+  // --mat-sys-surface-container
+  // --mat-sys-surface-container-low
+  // --mat-sys-surface-container-high
+
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.page{
+  padding: 24px;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+
+.header{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.table-toolbar{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:16px;
+}
+
+mat-form-field{
+  width:250px;
+}
+
+.table{
+  width:100%;
+}
+
+.table tr:hover{
+  background: rgba(255,255,255,0.05);
+}
+
+mat-card{
+  padding:20px;
+}
+
+.spacer {
+  flex: 1 1 auto !important;
+}

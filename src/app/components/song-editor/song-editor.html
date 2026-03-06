@@ -1,0 +1,50 @@
+<div class="page">
+  <div class="header">
+
+    <h2>Song Editor</h2>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="saveSong()">
+
+      <mat-icon>save</mat-icon>
+      Save
+
+    </button>
+
+  </div>
+  <mat-card>
+
+    <div class="transpose-controls" style="margin-bottom: 20px;">
+
+      <button mat-raised-button (click)="transpose(-1)">-</button>
+
+      <span>Key: {{displayKey}}</span>
+
+      <button mat-raised-button (click)="transpose(1)">+</button>
+
+    </div>
+    <div class="editor-container">
+      <textarea
+        [(ngModel)]="chordText"
+        (input)="updatePreview()"
+        rows="10">
+      </textarea>
+
+      <div class="preview">
+
+        @for (line of previewLines; track $index) {
+
+          <div class="line">
+            <div class="chord-line">{{ line.chords }}</div>
+            <div class="lyric-line">{{ line.lyric }}</div>
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+  </mat-card>
+</div>

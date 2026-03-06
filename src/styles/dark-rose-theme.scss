@@ -1,0 +1,47 @@
+/* dark-rose-theme.scss */
+@use '@angular/material' as mat;
+
+/* 1️⃣ Define a simple dark rose palette */
+$dark-rose-primary: #f43f5e; // rose-500
+$dark-rose-on-primary: #ffffff;
+
+$dark-rose-accent: #ec4899;  // pink accent
+$dark-rose-on-accent: #ffffff;
+
+$dark-rose-warn: #ef4444;
+$dark-rose-on-warn: #ffffff;
+
+/* 2️⃣ Apply theme to Angular Material components */
+mat-toolbar {
+  background-color: $dark-rose-primary;
+  color: $dark-rose-on-primary;
+}
+
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-fab, .mat-mini-fab {
+  background-color: $dark-rose-primary;
+  color: $dark-rose-on-primary;
+
+  &:hover {
+    background-color: darken($dark-rose-primary, 10%);
+  }
+}
+
+.mat-accent {
+  background-color: $dark-rose-accent !important;
+  color: $dark-rose-on-accent !important;
+}
+
+/* 3️⃣ Global dark mode surfaces */
+html, body {
+  background-color: #121212;  // dark background
+  color: #ffffff;             // default text color
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Optional: mat-sidenav background */
+mat-sidenav {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}

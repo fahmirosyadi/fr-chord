@@ -1,0 +1,75 @@
+<mat-toolbar class="app-toolbar">
+
+  <!-- LEFT -->
+  <div class="toolbar-left">
+    <button mat-icon-button (click)="toggleSidenav.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span class="app-title">FR System</span>
+
+    <button mat-button [matMenuTriggerFor]="themeMenu">
+      Theme
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #themeMenu="matMenu">
+      @for (theme of themeService.THEMES; track theme) {
+        <button
+          mat-menu-item
+          (click)="themeService.setTheme(theme)"
+          [class.active]="themeService.currentTheme === theme"
+        >
+          {{ theme | titlecase }}
+        </button>
+      }
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="masterMenu">
+      Master
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #masterMenu="matMenu">
+      <button mat-menu-item routerLink="/role">Role</button>
+      <button mat-menu-item routerLink="/user">User</button>
+      <button mat-menu-item routerLink="/genre">Genre</button>
+      <button mat-menu-item routerLink="/song">Song</button>
+    </mat-menu>
+
+
+  </div>
+
+
+  <!-- CENTER -->
+  <div class="toolbar-center">
+
+
+
+  </div>
+
+
+  <!-- RIGHT -->
+  <div class="toolbar-right">
+
+    <button mat-button [matMenuTriggerFor]="profileMenu">
+      <mat-icon>account_circle</mat-icon>
+      Profile
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon>
+        My Profile
+      </button>
+
+      <button mat-menu-item>
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </mat-menu>
+
+  </div>
+
+</mat-toolbar>
