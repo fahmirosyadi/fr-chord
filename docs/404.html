@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <title>Redirecting...</title>
-    <script type="text/javascript">
-      // Redirect all 404s to index.html, preserving path
-      var path = window.location.pathname;
-      window.location.href = '/fr-chord/index.html' + path.replace('/fr-chord', '');
+    <script>
+      // Preserve the path after /fr-chord/
+      const base = '/fr-chord/';
+      const path = window.location.pathname.replace(base, '');
+      window.location.href = base + '#' + path + window.location.search + window.location.hash;
     </script>
   </head>
   <body></body>
