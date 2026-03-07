@@ -1,8 +1,9 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { Role } from './pages/role/role';
 import { Genre } from './pages/genre/genre';
 import { Song } from './pages/song/song';
 import { SongEditor } from './components/song-editor/song-editor';
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   {
@@ -26,3 +27,9 @@ export const routes: Routes = [
     component: SongEditor
   }
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
