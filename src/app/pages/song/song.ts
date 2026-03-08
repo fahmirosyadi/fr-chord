@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Supabase } from '../../services/supabase';
 import { DataTableComponent, TableColumn } from '../../components/data-table-component/data-table-component';
 import { SharedModule } from '../../shared.module';
 import { Router } from '@angular/router';
+import { SongService } from '../../services/song-service';
 
 @Component({
   selector: 'app-song',
@@ -25,14 +25,18 @@ export class Song implements OnInit {
     { key: 'female_key', label: 'Female Key' },
   ];
 
-  constructor(private supabase: Supabase, private router: Router) {}
+  constructor(private service: SongService, private router: Router) {}
 
   async ngOnInit() {
-    this.data = await this.supabase.getSongs();
+    this.data = await this.service.getAll();
   }
 
   editSong(song: any) {
     this.router.navigate(['/song-editor', song.id]);
+  }
+
+  viewSong(song: any) {
+    this.router.navigate(['/song-view', song.id]);
   }
 
   addSong() {

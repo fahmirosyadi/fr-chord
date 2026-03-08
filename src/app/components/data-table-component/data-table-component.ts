@@ -22,6 +22,11 @@ export class DataTableComponent implements AfterViewInit {
 
   @Input() showActions = false;
   @Output() edit = new EventEmitter<any>();
+  @Output() view = new EventEmitter<any>();
+
+  onView(row: any) {
+    this.view.emit(row);
+  }
 
   onEdit(row: any) {
     this.edit.emit(row);

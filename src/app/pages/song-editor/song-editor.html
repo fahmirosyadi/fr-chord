@@ -1,0 +1,64 @@
+<div class="page">
+  <div class="header">
+
+    <h2>Song Editor</h2>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="saveSong()">
+
+      <mat-icon>save</mat-icon>
+      Save
+
+    </button>
+
+  </div>
+  <div style="display: flex; gap: 20px;">
+    <mat-card style="width: 400px;">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="song.title">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Artist</mat-label>
+        <input matInput [(ngModel)]="song.artist">
+      </mat-form-field>
+    </mat-card>
+    <mat-card style="width: 100%;">
+      <div class="transpose-controls" style="margin-bottom: 20px;">
+
+        <button mat-raised-button (click)="song.transpose(-1)">-</button>
+
+        <span>Key: {{song.key}}</span>
+
+        <button mat-raised-button (click)="song.transpose(1)">+</button>
+
+      </div>
+      <div class="editor-container">
+        <mat-form-field>
+          <textarea matInput [(ngModel)]="song.chord" rows="50"></textarea>
+        </mat-form-field>
+
+        <div class="preview">
+
+          <div class="song-title">{{ song.title }}</div>
+
+          @for (part of song.parts; track $index) {
+            <div class="part">
+              <div class="part-title">{{ part.name }}</div>
+              @for (line of part.lines; track $index) {
+                <div class="line">
+                  <div class="chord-line">{{ line.chords }}</div>
+                  <div class="lyric-line">{{ line.lyric }}</div>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+
+      </div>
+    </mat-card>
+  </div>
+</div>

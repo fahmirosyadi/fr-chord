@@ -1,8 +1,10 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { Role } from './pages/role/role';
 import { Genre } from './pages/genre/genre';
 import { Song } from './pages/song/song';
-import { SongEditor } from './components/song-editor/song-editor';
+import { SongEditor } from './pages/song-editor/song-editor';
+import { NgModule } from '@angular/core';
+import { SongView } from './pages/song-view/song-view';
 
 export const routes: Routes = [
   {
@@ -24,6 +26,15 @@ export const routes: Routes = [
   {
     path: 'song-editor/:id',
     component: SongEditor
+  },
+  {
+    path: 'song-view/:id',
+    component: SongView
   }
 ];
 
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

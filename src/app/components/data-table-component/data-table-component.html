@@ -37,6 +37,10 @@
 
         <td mat-cell *matCellDef="let row">
 
+          <button mat-icon-button (click)="onView(row)">
+            <mat-icon>view</mat-icon>
+          </button>
+
           <button mat-icon-button (click)="onEdit(row)">
             <mat-icon>edit</mat-icon>
           </button>
