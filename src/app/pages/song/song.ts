@@ -14,15 +14,14 @@ export class Song implements OnInit {
 
   data: any[] = [];
 
-
   columns: TableColumn[] = [
     // { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
     { key: 'genre.name', label: 'Genre' },
     { key: 'key', label: 'Key' },
-    { key: 'male_key', label: 'Male Key' },
-    { key: 'female_key', label: 'Female Key' },
+    { key: 'lowestNote', label: 'Lowest Note' },
+    { key: 'highestNote', label: 'Highest Note' },
   ];
 
   constructor(private service: SongService, private router: Router) {}

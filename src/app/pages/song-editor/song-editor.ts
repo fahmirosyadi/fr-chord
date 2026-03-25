@@ -19,10 +19,6 @@ export class SongEditor implements OnInit {
 
   song = new Song();
 
-  loadSong(data: Partial<Song>) {
-    this.song = new Song(data);
-  }
-
   constructor(private route: ActivatedRoute, private router: Router, public service: SongService) {}
 
   async ngOnInit() {
@@ -30,10 +26,7 @@ export class SongEditor implements OnInit {
     this.songId = this.route.snapshot.paramMap.get('id');
 
     if (this.songId) {
-      const song = await this.service.getById(this.songId);
-      if (song) {
-        this.loadSong(song);
-      }
+      this.song = await this.service.getById(this.songId);
     }
 
   }

@@ -14,8 +14,8 @@
     </button>
 
   </div>
-  <div style="display: flex; gap: 20px;">
-    <mat-card style="width: 400px;">
+  <div class="grid grid-cols-1 lg-grid-cols-3 gap-5">
+    <mat-card class="">
       <mat-form-field>
         <mat-label>Title</mat-label>
         <input matInput [(ngModel)]="song.title">
@@ -24,8 +24,16 @@
         <mat-label>Artist</mat-label>
         <input matInput [(ngModel)]="song.artist">
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Lowest Note</mat-label>
+        <input matInput [(ngModel)]="song.lowestNote">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Highest Note</mat-label>
+        <input matInput [(ngModel)]="song.highestNote">
+      </mat-form-field>
     </mat-card>
-    <mat-card style="width: 100%;">
+    <mat-card class="col-span-2">
       <div class="transpose-controls" style="margin-bottom: 20px;">
 
         <button mat-raised-button (click)="song.transpose(-1)">-</button>

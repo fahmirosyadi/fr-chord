@@ -5,10 +5,13 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 
+
 @use '@angular/material' as mat;
 @use 'sass:map';
 // @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 
+
+@use "layout.scss";
 @include mat.core();
 
 @mixin app-surface($base) {
@@ -117,4 +120,12 @@ mat-card{
 
 .spacer {
   flex: 1 1 auto !important;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
 }

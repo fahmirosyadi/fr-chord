@@ -1,0 +1,74 @@
+$columns: 1 2 3 4 5 6 7 8 9 10 11 12;
+
+$gaps: (
+  0: 0px,
+  0-5: 0.125rem,
+  1: 0.25rem,
+  1-5: 0.375rem,
+  2: 0.5rem,
+  2-5: 0.625rem,
+  3: 0.75rem,
+  3-5: 0.875rem,
+  4: 1rem,
+  5: 1.25rem,
+  6: 1.5rem,
+  7: 1.75rem,
+  8: 2rem,
+  9: 2.25rem,
+  10: 2.5rem
+);
+
+$breakpoints: (
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  xl2: 1536px
+);
+
+/* =====================
+   GRID CONTAINER
+===================== */
+.grid { display: grid; }
+
+/* =====================
+   GRID COLUMNS
+===================== */
+@each $col in $columns {
+  .grid-cols-#{$col} {
+    grid-template-columns: repeat($col, minmax(0, 1fr));
+  }
+}
+
+/* =====================
+   GAP UTILITIES
+===================== */
+@each $name, $size in $gaps {
+  .gap-#{$name} { gap: $size; }
+  .gap-x-#{$name} { column-gap: $size; }
+  .gap-y-#{$name} { row-gap: $size; }
+}
+
+/* =====================
+   COLUMN SPAN
+===================== */
+@each $col in $columns {
+  .col-span-#{$col} { grid-column: span #{$col} / span #{$col}; }
+}
+
+/* =====================
+   RESPONSIVE UTILITIES
+===================== */
+@each $break, $width in $breakpoints {
+  @media (min-width: $width) {
+    @each $col in $columns {
+      .#{$break}-grid-cols-#{$col} { grid-template-columns: repeat($col, minmax(0, 1fr)); }
+      .#{$break}-col-span-#{$col} { grid-column: span #{$col} / span #{$col}; }
+    }
+    @each $name, $size in $gaps {
+      .#{$break}-gap-#{$name} { gap: $size; }
+      .#{$break}-gap-x-#{$name} { column-gap: $size; }
+      .#{$break}-gap-y-#{$name} { row-gap: $size; }
+    }
+  }
+}
