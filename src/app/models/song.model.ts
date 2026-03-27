@@ -1,8 +1,14 @@
 import { BaseModel } from "./base-model.model";
 
-export interface SongPart {
-  name: string;
-  lines: SongLine[];
+export class SongPart {
+  name: string = "";
+  lines: SongLine[] = [];
+  label() {
+    return this.name[0].toUpperCase() + this.name.slice(1);
+  }
+  constructor(sp: Partial<SongPart>){
+    Object.assign(this, sp);
+  }
 }
 
 export interface SongLine {
@@ -29,6 +35,63 @@ export class Song extends BaseModel {
     if (data) {
       Object.assign(this, this.toCamelCase(data));
     }
+  }
+
+  getScale(key: string): string[] {
+    const index = Song.CHORDS.indexOf(key);
+    if (index === -1) return Song.CHORDS;
+
+    return Array.from({ length: 7 }, (_, i) => {
+      return Song.CHORDS[(index + [0,2,4,5,7,9,11][i]) % 12];
+    });
+  }
+
+  convertNumberChord(input: string): string {
+    const match = input.match(/^([1-7])(M|m)?(?:\(([^)]+)\))?(?:\/([1-7]))?$/);
+    if (!match) return input;
+
+    const degree = parseInt(match[1], 10) - 1;
+    const override = match[2];        // M | m
+    const extension = match[3] || ''; // 7, 9, maj7, etc.
+    const bassRaw = match[4];         // slash
+
+    const scale = this.getScale(this.key);
+    const root = scale[degree];
+
+    // 🎯 Default qualities
+    const defaultQualities = ['M', 'm', 'm', 'M', 'M', 'm', 'dim'];
+    let quality = defaultQualities[degree];
+
+    if (override) {
+      quality = override;
+    }
+
+    // 🎼 Base chord
+    let suffix = '';
+    if (quality === 'm') suffix = 'm';
+    else if (quality === 'M') suffix = '';
+    else if (quality === 'dim') suffix = 'dim';
+
+    let chord = root + suffix;
+
+    // 🎹 Add extension
+    if (extension) {
+      // Special handling
+      if (extension.toLowerCase() === 'maj7') {
+        chord += 'maj7';
+      } else {
+        chord += extension;
+      }
+    }
+
+    // 🎸 Slash chord
+    if (bassRaw) {
+      const bassDegree = parseInt(bassRaw, 10) - 1;
+      const bassNote = scale[bassDegree];
+      chord += `/${bassNote}`;
+    }
+
+    return chord;
   }
 
   getTransposeSteps(): number {
@@ -83,7 +146,7 @@ export class Song extends BaseModel {
       const partMatch = trimmed.match(partRegex);
       if (partMatch) {
         const name = trimmed.replace(/[\[\]]/g, '').toLowerCase();
-        currentPart = { name, lines: [] };
+        currentPart = new SongPart({name, lines: [] });
         parts.push(currentPart);
         partMap[name] = currentPart; // store original part
         continue;
@@ -92,25 +155,43 @@ export class Song extends BaseModel {
       // Check for jump lines like [To Chorus]
       const jumpMatch = trimmed.match(jumpRegex);
       if (jumpMatch) {
-        const targetName = jumpMatch[2].replace(/[\[\]]/g, '').trim().toLowerCase();
-        const targetPart = partMap[targetName];
+        // jumpMatch[2] = "Chorus | -3" or just "Chorus"
+        let targetPartName = jumpMatch[2].replace(/[\[\]]/g, '').trim();
+        let modStep = 0;
+
+        // Check if there is a modulation step
+        const modSplit = targetPartName.split('|');
+        if (modSplit.length === 2) {
+          targetPartName = modSplit[0].trim(); // "Chorus"
+          modStep = parseFloat(modSplit[1].trim()); // -3
+        }
+
+        const targetPart = partMap[targetPartName.toLowerCase()];
         if (targetPart) {
-          // Create a NEW part with the target name (duplicate lines)
-          const newPart: SongPart = {
-            name: targetName,
-            lines: targetPart.lines.map(line => ({ ...line })) // shallow copy of lines
-          };
+          // Create a new part as a copy with optional transpose
+          const newPart: SongPart = new SongPart(
+            {
+              name: targetPartName,
+              lines: targetPart.lines.map(line => ({
+                chords: line.chords
+                  .split(' ')
+                  .map(ch => this.transposeChord(ch, modStep))
+                  .join(' '),
+                lyric: line.lyric
+              }))
+            }
+          )
           parts.push(newPart);
-          currentPart = newPart; // set currentPart to the new one
+          currentPart = newPart;
         } else {
-          console.warn(`Jump target part "${targetName}" not found!`);
+          console.warn(`Jump target part "${targetPartName}" not found!`);
         }
         continue; // skip normal chord parsing
       }
 
       // If no current part yet, create a default
       if (!currentPart) {
-        currentPart = { name: 'song', lines: [] };
+        currentPart = new SongPart({ name: 'song', lines: [] });
         parts.push(currentPart);
         partMap['song'] = currentPart;
       }
@@ -125,7 +206,8 @@ export class Song extends BaseModel {
         const before = line.substring(pos, match.index);
         lyric += before;
         chords += ' '.repeat(before.length);
-        const transposed = this.transposeChord(match[1], step);
+        const converted = this.convertNumberChord(match[1]);
+        const transposed = this.transposeChord(converted, step);
         chords += transposed;
         pos = match.index + match[0].length;
       }

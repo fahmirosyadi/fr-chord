@@ -1,0 +1,35 @@
+<div class="register-container">
+  <mat-card class="grid gap-3">
+    <mat-card-title>Register</mat-card-title>
+
+    <mat-card-content>
+      <form (ngSubmit)="register()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="email" name="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput [(ngModel)]="password" name="password" type="password" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput [(ngModel)]="confirmPassword" name="confirmPassword" type="password" required />
+        </mat-form-field>
+
+        <!-- Error Message -->
+        <mat-error *ngIf="errorMessage">
+          {{ errorMessage }}
+        </mat-error>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading">
+          {{ loading ? 'Registering...' : 'Register' }}
+        </button>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

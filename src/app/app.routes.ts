@@ -5,31 +5,30 @@ import { Song } from './pages/song/song';
 import { SongEditor } from './pages/song-editor/song-editor';
 import { NgModule } from '@angular/core';
 import { SongView } from './pages/song-view/song-view';
+import { authGuard } from './auth-guard';
+import { LoginComponent } from './login-component/login-component';
+import { RegisterComponent } from './pages/register-component/register-component';
 
 export const routes: Routes = [
   {
-    path: 'role',
-    component: Role
+    path: 'login',
+    component: LoginComponent
   },
   {
-    path: 'genre',
-    component: Genre
+    path: 'register',
+    component: RegisterComponent
   },
   {
-    path: 'song',
-    component: Song
-  },
-  {
-    path: 'song-editor',
-    component: SongEditor
-  },
-  {
-    path: 'song-editor/:id',
-    component: SongEditor
-  },
-  {
-    path: 'song-view/:id',
-    component: SongView
+    path: '',
+    canActivate: [authGuard],
+    children: [
+      { path: 'role', component: Role },
+      { path: 'genre', component: Genre },
+      { path: 'song', component: Song },
+      { path: 'song-editor', component: SongEditor },
+      { path: 'song-editor/:id', component: SongEditor },
+      { path: 'song-view/:id', component: SongView },
+    ]
   }
 ];
 

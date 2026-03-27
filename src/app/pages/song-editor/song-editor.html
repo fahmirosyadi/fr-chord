@@ -14,7 +14,7 @@
     </button>
 
   </div>
-  <div class="grid grid-cols-1 lg-grid-cols-3 gap-5">
+  <div class="grid grid-cols-1 lg-grid-cols-4 gap-5">
     <mat-card class="">
       <mat-form-field>
         <mat-label>Title</mat-label>
@@ -33,17 +33,13 @@
         <input matInput [(ngModel)]="song.highestNote">
       </mat-form-field>
     </mat-card>
-    <mat-card class="col-span-2">
-      <div class="transpose-controls" style="margin-bottom: 20px;">
-
+    <mat-card class="grid gap-3 lg-col-span-3">
+      <div class="grid grid-cols-3 gap-2" style="width: 200px;">
         <button mat-raised-button (click)="song.transpose(-1)">-</button>
-
-        <span>Key: {{song.key}}</span>
-
+        <button mat-raised-button disabled="">{{song.key}}</button>
         <button mat-raised-button (click)="song.transpose(1)">+</button>
-
       </div>
-      <div class="editor-container">
+      <div class="grid lg-grid-cols-2 gap-5">
         <mat-form-field>
           <textarea matInput [(ngModel)]="song.chord" rows="50"></textarea>
         </mat-form-field>
@@ -54,7 +50,7 @@
 
           @for (part of song.parts; track $index) {
             <div class="part">
-              <div class="part-title">{{ part.name }}</div>
+              <div class="part-title">{{ part.label() }}</div>
               @for (line of part.lines; track $index) {
                 <div class="line">
                   <div class="chord-line">{{ line.chords }}</div>

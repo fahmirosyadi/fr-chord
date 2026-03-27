@@ -1,61 +1,64 @@
-<div class="page">
+<div
+  class="page"
+  (swipeleft)="nextPart()"
+  (swiperight)="prevPart()">
+  <div class="grid lg-grid-cols-5 gap-3">
 
-  <div>
-    <div class="transpose-controls" style="margin-bottom: 20px;">
+		<mat-card class="col-span-1 lg-col-span-4">
+			<div class="song-header">
 
-      <button mat-raised-button (click)="song.transpose(-1)">-</button>
+				<button mat-icon-button (click)="prevPart()">
+					<mat-icon>chevron_left</mat-icon>
+				</button>
 
-      <span>Key: {{song.key}}</span>
+				<h2>{{ song.parts[currentIndex]?.label() }}</h2>
 
-      <button mat-raised-button (click)="song.transpose(1)">+</button>
+				<button mat-icon-button (click)="nextPart()">
+					<mat-icon>chevron_right</mat-icon>
+				</button>
 
-    </div>
+			</div>
+
+			<div class="song-body">
+
+				<div class="song-content">
+
+					@for (line of song.parts[currentIndex]?.lines; track $index) {
+
+						<div class="line">
+							<div class="chords">{{ line.chords }}</div>
+							<div class="lyrics">{{ line.lyric }}</div>
+						</div>
+
+					}
+
+				</div>
+
+
+			</div>
+		</mat-card>
+		<mat-card class="col-span-1 flex flex-col items-center">
+      <div>
+        <div class="grid grid-cols-3 gap-2" style="margin-bottom: 20px; width: 200px;">
+          <button mat-raised-button (click)="song.transpose(-1)">-</button>
+					<button mat-raised-button disabled="">{{song.key}}</button>
+					<button mat-raised-button (click)="song.transpose(1)">+</button>
+				</div>
+			</div>
+      <div class="song-controls">
+
+        @for (part of song.parts; track $index) {
+          <button
+            mat-stroked-button
+            (click)="selectPart($index)"
+            [class.active]="$index === currentIndex">
+
+            {{ part.label() }}
+
+          </button>
+        }
+
+      </div>
+		</mat-card>
   </div>
-
-  <div class="song-header">
-
-    <button mat-icon-button (click)="prevPart()">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-
-    <h2>{{ song.parts[currentIndex]?.name }}</h2>
-
-    <button mat-icon-button (click)="nextPart()">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-
-  </div>
-
-  <div class="song-body">
-
-    <div class="song-content">
-
-      @for (line of song.parts[currentIndex]?.lines; track $index) {
-
-        <div class="line">
-          <div class="chords">{{ line.chords }}</div>
-          <div class="lyrics">{{ line.lyric }}</div>
-        </div>
-
-      }
-
-    </div>
-
-    <div class="song-controls">
-
-      @for (part of song.parts; track $index) {
-        <button
-          mat-stroked-button
-          (click)="selectPart($index)"
-          [class.active]="$index === currentIndex">
-
-          {{ part.name }}
-
-        </button>
-      }
-
-    </div>
-
-  </div>
-
 </div>

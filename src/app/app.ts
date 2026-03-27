@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { NavbarComponent } from './components/navbar/navbar';
 import { ThemeService } from './services/theme-service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,10 +26,17 @@ import { ThemeService } from './services/theme-service';
   styleUrls: ['./app.scss']               // ✅ plural
 })
 export class App {
+  showNavbar = true;
   protected readonly title = signal('fr-system-fe');
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService, private router: Router) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.showNavbar = event.url !== '/login';
+      });
+  }
 
   ngOnInit() {
     this.themeService.loadTheme();
