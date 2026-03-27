@@ -1,4 +1,4 @@
-<div class="page">
+<div class="">
   <div class="header">
 
     <h2>Song Editor</h2>
@@ -44,23 +44,7 @@
           <textarea matInput [(ngModel)]="song.chord" rows="50"></textarea>
         </mat-form-field>
 
-        <div class="preview">
-
-          <div class="song-title">{{ song.title }}</div>
-
-          @for (part of song.parts; track $index) {
-            <div class="part">
-              <div class="part-title">{{ part.label() }}</div>
-              @for (line of part.lines; track $index) {
-                <div class="line">
-                  <div class="chord-line">{{ line.chords }}</div>
-                  <div class="lyric-line">{{ line.lyric }}</div>
-                </div>
-              }
-            </div>
-          }
-
-        </div>
+        <app-song-preview [song]="song"></app-song-preview>
 
       </div>
     </mat-card>

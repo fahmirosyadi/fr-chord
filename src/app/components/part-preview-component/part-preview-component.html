@@ -1,0 +1,17 @@
+<div class="part">
+  <div class="part-title">{{ part.label() }}</div>
+
+  @for (row of part.lines; track $index) {
+    <div class="line">
+      @for (seg of row; track $index) {
+        <div class="segment" [class.no-chord]="!seg.chords">
+          <div class="chord-line" style="">
+            {{ seg.chords || '' }}
+          </div>
+          <div class="lyric-line">{{ seg.lyric }}</div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

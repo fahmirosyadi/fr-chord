@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { SongService } from '../../services/song-service';
 import { Song } from '../../models/song.model';
+import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
 
 @Component({
   selector: 'app-song-editor',
   standalone: true,
-  imports: [SharedModule, FormsModule],
+  imports: [SharedModule, FormsModule, SongPreviewComponent],
   templateUrl: './song-editor.html',
   styleUrl: './song-editor.scss'
 })

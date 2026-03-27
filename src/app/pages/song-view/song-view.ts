@@ -4,11 +4,12 @@ import { Supabase } from '../../services/supabase';
 import { SharedModule } from '../../shared.module';
 import { Song } from '../../models/song.model';
 import { SongService } from '../../services/song-service';
+import { PartPreviewComponent } from '../../components/part-preview-component/part-preview-component';
 
 @Component({
   selector: 'app-song-view',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, PartPreviewComponent],
   templateUrl: './song-view.html',
   styleUrl: './song-view.scss'
 })

@@ -4,39 +4,6 @@
   gap:20px;
 }
 
-.song-body{
-  flex:1;
-  display:flex;
-  gap:20px;
-}
-
-.song-content{
-  flex:1;
-  font-family: monospace;
-  display:inline-block;
-}
-
-.song-block{
-  font-family:monospace;
-  text-align:left;
-}
-
-.line{
-  margin-bottom:24px;
-}
-
-.chords{
-  color:#ffd54f;
-  font-size:24px;
-  font-weight:bold;
-  white-space:pre;
-}
-
-.lyrics{
-  font-size:24px;
-  white-space:pre;
-}
-
 .song-controls{
   display:flex;
   flex-direction:column;
@@ -48,4 +15,15 @@
   background:#ffd54f;
   color:black;
   font-weight:bold;
+}
+
+.preview{
+  font-family: monospace;
+  white-space: pre;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
 }
