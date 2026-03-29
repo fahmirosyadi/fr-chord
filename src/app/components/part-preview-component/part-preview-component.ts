@@ -11,4 +11,5 @@ import { SharedModule } from '../../shared.module';
 })
 export class PartPreviewComponent {
   @Input() part: SongPart = new SongPart({});
+  @Input() showTitle: boolean = true;
 }

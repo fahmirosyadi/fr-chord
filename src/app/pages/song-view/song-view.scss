@@ -4,13 +4,6 @@
   gap:20px;
 }
 
-.song-controls{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  width:160px;
-}
-
 .song-controls button.active{
   background:#ffd54f;
   color:black;

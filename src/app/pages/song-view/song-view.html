@@ -2,9 +2,9 @@
   class=""
   (swipeleft)="nextPart()"
   (swiperight)="prevPart()">
-  <div class="grid lg-grid-cols-5 gap-3">
+  <div class="grid lg-grid-cols-3 gap-3">
 
-		<mat-card class="col-span-1 lg-col-span-4">
+		<mat-card class="col-span-1 lg-col-span-2">
 			<div class="song-header">
 
 				<button mat-icon-button (click)="prevPart()">
@@ -24,7 +24,7 @@
         @if (song.parts[i]) {
           <div class="song-body">
             <div class="preview">
-              <app-part-preview [part]="song.parts[i]"></app-part-preview>
+              <app-part-preview [part]="song.parts[i]" [showTitle]="false"></app-part-preview>
             </div>
           </div>
 
@@ -44,7 +44,7 @@
 					<button mat-raised-button (click)="song.transpose(1)">+</button>
 				</div>
 			</div>
-      <div class="song-controls hidden lg-flex">
+      <div class="song-controls hidden grid grid-cols-3 gap-3">
 
         @for (part of song.parts; track $index) {
           <button

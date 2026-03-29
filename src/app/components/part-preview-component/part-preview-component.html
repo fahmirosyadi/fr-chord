@@ -1,5 +1,7 @@
 <div class="part">
-  <div class="part-title">{{ part.label() }}</div>
+  @if (showTitle) {
+    <div class="part-title">{{ part.label() }}</div>
+  }
 
   @for (row of part.lines; track $index) {
     <div class="line">
