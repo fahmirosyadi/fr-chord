@@ -31,6 +31,7 @@ export class Song implements OnInit {
   }
 
   editSong(song: any) {
+    console.log('song:', song);
     this.router.navigate(['/song-editor', song.id]);
   }
 
