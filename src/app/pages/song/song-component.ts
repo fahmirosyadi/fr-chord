@@ -3,14 +3,15 @@ import { DataTableComponent, TableColumn } from '../../components/data-table-com
 import { SharedModule } from '../../shared.module';
 import { Router } from '@angular/router';
 import { SongService } from '../../services/song-service';
+import { Song } from '../../models/song.model';
 
 @Component({
   selector: 'app-song',
   standalone: true,
   imports: [SharedModule, DataTableComponent],
-  templateUrl: './song.html',
+  templateUrl: './song-component.html',
 })
-export class Song implements OnInit {
+export class SongComponent implements OnInit {
 
   data: any[] = [];
 
@@ -30,12 +31,12 @@ export class Song implements OnInit {
     this.data = await this.service.getAll();
   }
 
-  editSong(song: any) {
+  editSong(song: Song) {
     console.log('song:', song);
     this.router.navigate(['/song-editor', song.id]);
   }
 
-  viewSong(song: any) {
+  viewSong(song: Song) {
     this.router.navigate(['/song-view', song.id]);
   }
 

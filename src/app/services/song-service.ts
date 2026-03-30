@@ -63,10 +63,10 @@ export class SongService {
 
   extractSongs(): Song[] {
     let result: Song[] = [];
-    this.getHtmlSongs().forEach((song) => {
-      let s = new Song(song);
-      result.push(s);
-    })
+    // this.getHtmlSongs().forEach((song) => {
+      // let s = new Song(song);
+      // result.push(s);
+    // })
     console.log(result);
     return result;
   }

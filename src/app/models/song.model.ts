@@ -20,7 +20,7 @@ export interface SongLine {
 }
 
 export class Song extends BaseModel {
-  id?: string;
+  id?: number;
   title?: string;
   artist?: string;
   chord: string = '';
@@ -32,27 +32,27 @@ export class Song extends BaseModel {
     'C','C#','D','D#','E','F','F#','G','G#','A','A#','B'
   ];
 
-  // constructor(data?: Partial<Song>) {
-  //   super(data);
-  //   if (data) {
-  //     Object.assign(this, this.toCamelCase(data));
-  //   }
-  // }
-
-  constructor(data?: any) {
+  constructor(data?: Partial<Song>) {
     super(data);
-    if(data.title.includes(" - ")){
-      this.title = data.title.split(" - ")[0];
-      this.artist = data.title.split(" - ")[1];
-    }else{
-      this.title = data.title;
-    }
-    this.key = data.key;
-    if(data.range && data.range.includes(" – ")){
-      this.lowestNote = data.range.split(" – ")[0];
-      this.highestNote = data.range.split(" – ")[1];
+    if (data) {
+      Object.assign(this, this.toCamelCase(data));
     }
   }
+
+  // constructor(data?: any) {
+  //   super(data);
+  //   if(data.title.includes(" - ")){
+  //     this.title = data.title.split(" - ")[0];
+  //     this.artist = data.title.split(" - ")[1];
+  //   }else{
+  //     this.title = data.title;
+  //   }
+  //   this.key = data.key;
+  //   if(data.range && data.range.includes(" – ")){
+  //     this.lowestNote = data.range.split(" – ")[0];
+  //     this.highestNote = data.range.split(" – ")[1];
+  //   }
+  // }
 
   getScale(key: string): string[] {
     const index = Song.CHORDS.indexOf(key);
