@@ -11,6 +11,7 @@ import { RegisterComponent } from './pages/register-component/register-component
 import { SongListComponent } from './pages/song-list-component/song-list-component';
 
 export const routes: Routes = [
+  { path: '', component: SongListComponent },
   {
     path: 'login',
     component: LoginComponent
@@ -31,7 +32,6 @@ export const routes: Routes = [
       { path: 'song-view/:id', component: SongView },
     ]
   },
-  { path: 'songs', component: SongListComponent }
 ];
 
 @NgModule({
