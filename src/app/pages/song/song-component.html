@@ -1,20 +1,33 @@
 <div class="page">
 
-  <div class="header">
-    <h2>Song Management</h2>
+	<div class="header">
+		<h2>Song Management</h2>
 
-    <button mat-flat-button color="primary" (click)="addSong()">
-      <mat-icon>add</mat-icon>
-      Add Song
-    </button>
-  </div>
+		<button
+			mat-flat-button
+			color="primary"
+			(click)="addSong()">
 
-  <app-data-table
-    [columns]="columns"
-    [data]="data"
-    [showActions]="true"
-    (edit)="editSong($event)"
-    (view)="viewSong($event)">
-  </app-data-table>
+			<mat-icon>add</mat-icon>
+			Add Song
+		</button>
+	</div>
+
+	<app-data-table
+		[columns]="columns"
+		[data]="data"
+		[showActions]="true"
+    (search)="onSearch($event)"
+		(edit)="editSong($event)"
+		(view)="viewSong($event)">
+	</app-data-table>
+
+	<mat-paginator
+		[length]="total"
+		[pageSize]="pageSize"
+		[pageIndex]="pageIndex"
+		[pageSizeOptions]="[5, 10, 25, 50]"
+		(page)="onPageChange($event)">
+	</mat-paginator>
 
 </div>

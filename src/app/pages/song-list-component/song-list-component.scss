@@ -1,0 +1,49 @@
+.page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* 🔍 Search Bar */
+.search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+}
+
+/* 📄 List */
+.song-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.song-item:hover {
+  background: #f5f5f5;
+}
+
+/* Text */
+.title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.artist {
+  font-size: 13px;
+  color: #757575;
+}

@@ -1,0 +1,27 @@
+<div class="page">
+
+  <!-- 🔍 Sticky Search Bar -->
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input
+      type="text"
+      placeholder="Search songs..."
+      [(ngModel)]="search"
+    />
+  </div>
+
+  <!-- 📄 Song List -->
+  <div class="song-list">
+    @for (song of filteredData; track $index) {
+      <div
+        class="song-item"
+        (click)="viewSong(song)"
+        matRipple
+      >
+        <div class="title">{{ song.title }}</div>
+        <div class="artist">{{ song.artist }}</div>
+      </div>
+    }
+  </div>
+
+</div>

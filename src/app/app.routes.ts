@@ -8,6 +8,7 @@ import { SongView } from './pages/song-view/song-view';
 import { authGuard } from './auth-guard';
 import { LoginComponent } from './login-component/login-component';
 import { RegisterComponent } from './pages/register-component/register-component';
+import { SongListComponent } from './pages/song-list-component/song-list-component';
 
 export const routes: Routes = [
   {
@@ -29,7 +30,8 @@ export const routes: Routes = [
       { path: 'song-editor/:id', component: SongEditor },
       { path: 'song-view/:id', component: SongView },
     ]
-  }
+  },
+  { path: 'songs', component: SongListComponent }
 ];
 
 @NgModule({

@@ -15,10 +15,37 @@ export class SongService {
     this.extractSongs();
   }
 
+	async getPaged(
+    page: number,
+    pageSize: number,
+    search: string = ''
+  ) {
+
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+
+    const { data, error } = await this.query
+      .rpc('search_song', {
+        search_term: search
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    const paged = data?.slice(from, to + 1) ?? [];
+
+    return {
+      data: paged,
+      total: data?.length ?? 0,
+    };
+
+  }
+
   async getAll(): Promise<Song[]> {
 
     const { data, error } = await this.query
-      .from('song').select(`*, genre (*)`);
+      .from('song').select(`*, genre (*), profiles (full_name)`);
 
     if (error) throw error;
 

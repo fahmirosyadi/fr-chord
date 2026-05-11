@@ -1,70 +1,82 @@
 <mat-card>
 
-  <div class="table-toolbar">
-    <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
-      <input matInput (keyup)="applyFilter($event)">
-    </mat-form-field>
-  </div>
+	<div class="table-toolbar">
 
-  <table mat-table [dataSource]="dataSource" matSort>
+		<mat-form-field appearance="outline">
 
-    @for (col of columns; track col.key) {
+			<mat-label>Search</mat-label>
 
-      <ng-container [matColumnDef]="col.key">
+			<input
+				matInput
+				(keyup)="onSearch($event)">
 
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          {{col.label}}
-        </th>
+		</mat-form-field>
 
-        <td mat-cell *matCellDef="let row">
-          {{ getValue(row, col.key) }}
-        </td>
+	</div>
 
-      </ng-container>
+	<table
+		mat-table
+		[dataSource]="data"
+		class="mat-elevation-z1">
 
-    }
+		@for (col of columns; track col.key) {
 
-    <!-- ACTION COLUMN -->
+			<ng-container [matColumnDef]="col.key">
 
-    @if (showActions) {
+				<th mat-header-cell *matHeaderCellDef>
+					{{ col.label }}
+				</th>
 
-      <ng-container matColumnDef="actions">
+				<td mat-cell *matCellDef="let row">
+					{{ getValue(row, col.key) }}
+				</td>
 
-        <th mat-header-cell *matHeaderCellDef>
-          Actions
-        </th>
+			</ng-container>
 
-        <td mat-cell *matCellDef="let row">
+		}
 
-          <button mat-icon-button (click)="onEdit(row); $event.stopPropagation()">
-            <mat-icon>edit</mat-icon>
-          </button>
+		@if (showActions) {
 
-          <button mat-icon-button>
-            <mat-icon>delete</mat-icon>
-          </button>
+			<ng-container matColumnDef="actions">
 
-        </td>
+				<th mat-header-cell *matHeaderCellDef>
+					Actions
+				</th>
 
-      </ng-container>
+				<td mat-cell *matCellDef="let row">
 
-    }
+					<button
+						mat-icon-button
+						(click)="onEdit(row); $event.stopPropagation()">
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<mat-icon>edit</mat-icon>
 
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      (click)="onView(row)"
-      class="clickable-row">
-    </tr>
+					</button>
 
-  </table>
+					<button mat-icon-button>
 
-  <mat-paginator
-    [pageSize]="10"
-    [pageSizeOptions]="[5,10,25,100]">
-  </mat-paginator>
+						<mat-icon>delete</mat-icon>
+
+					</button>
+
+				</td>
+
+			</ng-container>
+
+		}
+
+		<tr
+			mat-header-row
+			*matHeaderRowDef="displayedColumns">
+		</tr>
+
+		<tr
+			mat-row
+			*matRowDef="let row; columns: displayedColumns"
+			(click)="onView(row)"
+			class="clickable-row">
+		</tr>
+
+	</table>
 
 </mat-card>

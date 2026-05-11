@@ -9,30 +9,41 @@ export class AuthService {
   supabase = new Supabase().supabase;
 
   async signUp(email: string, password: string) {
-    return await this.supabase.auth.signUp({
-      email,
-      password
-    });
+		const response = await this.supabase.auth.signUp({
+  		email,
+		  password,
+		});
+
+		const user = response.data.user;
+
+		if (user) {
+		  await this.supabase.from('profiles').upsert({
+				id: user.id,
+				full_name: email.split('@')[0],
+		  });
+		}
+
+		return response;
   }
 
   async signIn(email: string, password: string) {
-    return await this.supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+		return await this.supabase.auth.signInWithPassword({
+		  email,
+		  password
+		});
   }
 
   async signOut() {
-    return await this.supabase.auth.signOut();
+		return await this.supabase.auth.signOut();
   }
 
   async getUser() {
-    const { data } = await this.supabase.auth.getUser();
-    return data.user;
+		const { data } = await this.supabase.auth.getUser();
+		return data.user;
   }
 
   async getSession() {
-    const { data } = await this.supabase.auth.getSession();
-    return data.session;
+		const { data } = await this.supabase.auth.getSession();
+		return data.session;
   }
 }

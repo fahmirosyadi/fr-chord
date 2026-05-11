@@ -32,10 +32,11 @@ export class App {
 
   constructor(private themeService: ThemeService, private router: Router) {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.showNavbar = event.url !== '/login';
-      });
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+      const hiddenRoutes = ['/login', '/songs'];
+      this.showNavbar = !hiddenRoutes.includes(event.url);
+    });
   }
 
   ngOnInit() {

@@ -39,21 +39,6 @@ export class Song extends BaseModel {
     }
   }
 
-  // constructor(data?: any) {
-  //   super(data);
-  //   if(data.title.includes(" - ")){
-  //     this.title = data.title.split(" - ")[0];
-  //     this.artist = data.title.split(" - ")[1];
-  //   }else{
-  //     this.title = data.title;
-  //   }
-  //   this.key = data.key;
-  //   if(data.range && data.range.includes(" – ")){
-  //     this.lowestNote = data.range.split(" – ")[0];
-  //     this.highestNote = data.range.split(" – ")[1];
-  //   }
-  // }
-
   getScale(key: string): string[] {
     const index = Song.CHORDS.indexOf(key);
     if (index === -1) return Song.CHORDS;
@@ -72,51 +57,59 @@ export class Song extends BaseModel {
   }
 
   convertNumberChord(input: string): string {
-    const match = input.match(/^([1-7])(M|m)?(?:\(([^)]+)\))?(?:\/([1-7]))?$/);
+    // ✅ normalize YOUR syntax
+    input = input
+      .replace(/-M-7/gi, '7')
+      .replace(/-m-7/gi, 'm7')
+      .replace(/-/g, '');
+
+    const match = input.match(
+      /^([1-7])([#b]?)(dim|aug|sus[24]?|add\d+|M|m)?([a-zA-Z0-9]*)?(?:\/([1-7]))?$/
+    );
+
     if (!match) return input;
 
     const degree = parseInt(match[1], 10) - 1;
-    const override = match[2];
-    let extension = match[3] || '';
-    const bassRaw = match[4];
+    const accidental = match[2];
+    let qualityOverride = match[3] || '';
+    let extension = match[4] || '';
+    const bassRaw = match[5];
 
     const scale = this.getScale(this.key);
     let root = scale[degree];
 
-    // 🔥 handle accidental (b / #)
-    if (extension === 'b' || extension === '#') {
+    // ✅ apply accidental BEFORE transpose
+    if (accidental) {
       const index = Song.CHORDS.indexOf(root);
       root =
-        extension === 'b'
-          ? Song.CHORDS[(index - 1 + 12) % 12]
-          : Song.CHORDS[(index + 1) % 12];
-      extension = '';
+        accidental === '#'
+          ? Song.CHORDS[(index + 1) % 12]
+          : Song.CHORDS[(index - 1 + 12) % 12];
     }
+
+    if (qualityOverride === 'M') qualityOverride = '';
+    if (qualityOverride === 'm') qualityOverride = 'm';
 
     const defaultQualities = ['M', 'm', 'm', 'M', 'M', 'm', 'dim'];
-    let quality = defaultQualities[degree];
-    if (override) quality = override;
+    let quality = qualityOverride || defaultQualities[degree];
 
     let suffix = '';
+
     if (quality === 'm') suffix = 'm';
     else if (quality === 'dim') suffix = 'dim';
+    else if (quality === 'aug') suffix = 'aug';
+    else if (quality.startsWith('sus')) suffix = quality;
 
-    let chord = root + suffix;
+    if (extension.toLowerCase() === 'maj7') extension = 'M7';
 
-    if (extension) {
-      chord += extension.toLowerCase() === 'maj7' ? 'maj7' : extension;
-    }
+    let chord = root + suffix + extension;
 
     if (bassRaw) {
-      const bassNote = this.getScale(this.key)[parseInt(bassRaw, 10) - 1];
+      const bassNote = scale[parseInt(bassRaw, 10) - 1];
       chord += `/${bassNote}`;
     }
 
     return chord;
-  }
-
-  getTransposeSteps(): number {
-    return Song.CHORDS.indexOf(this.key);
   }
 
   transposeChord(chord: string, step: number): string {
@@ -126,7 +119,6 @@ export class Song extends BaseModel {
 
     let root = rootMatch[0];
 
-    // normalize flat → sharp system
     const flatMap: Record<string, string> = {
       Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#'
     };
@@ -148,7 +140,6 @@ export class Song extends BaseModel {
   }
 
   get parts(): SongPart[] {
-    const baseStep = this.getTransposeSteps();
     const lines = this.chord.split('\n');
 
     const parts: SongPart[] = [];
@@ -165,7 +156,6 @@ export class Song extends BaseModel {
     for (const line of lines) {
       const trimmed = line.trim();
 
-      // 🎯 PART DEFINE
       const partMatch = trimmed.match(partRegex);
       if (partMatch) {
         const name = (partMatch[1] + (partMatch[2] || '')).toLowerCase().trim();
@@ -179,7 +169,6 @@ export class Song extends BaseModel {
         continue;
       }
 
-      // 🔁 CALL PART
       const jumpMatch = trimmed.match(jumpRegex);
       if (jumpMatch) {
         const targetName = jumpMatch[1].toLowerCase().trim();
@@ -204,7 +193,6 @@ export class Song extends BaseModel {
         continue;
       }
 
-      // 🎚 MODULATION
       const modMatch = trimmed.match(modRegex);
       if (modMatch) {
         currentMod += parseInt(modMatch[1], 10);
@@ -216,10 +204,14 @@ export class Song extends BaseModel {
         parts.push(currentPart);
       }
 
-      const matches = [...line.matchAll(/\[([^\]]+)\]/g)];
-      const row: SongLine[] = [];
+      const step = (currentPart.transpose || 0) + currentMod;
 
-      const step = baseStep + (currentPart.transpose || 0) + currentMod;
+      const matches = [
+        ...line.matchAll(/\[([^\]]+)\]/g),
+        ...line.matchAll(/\{([^}]+)\}/g)
+      ].sort((a, b) => a.index! - b.index!);
+
+      const row: SongLine[] = [];
 
       if (!matches.length) {
         row.push({ chords: '', lyric: line });
@@ -232,32 +224,53 @@ export class Song extends BaseModel {
         }
 
         for (let i = 0; i < matches.length; i++) {
-          const chordRaw = matches[i][1];
+          const raw = matches[i][0];
+          const content = matches[i][1];
+          const isBar = raw.startsWith('{');
 
           let chordConverted = '';
 
-          if (chordRaw.includes('/')) {
-            const [main, bass] = chordRaw.split('/');
+          if (isBar) {
+            const tokens = content.includes(' ')
+              ? content.split(/\s+/)
+              : content.split('');
 
-            const mainChord = this.transposeChord(
-              this.convertNumberChord(main),
-              step
-            );
+            const formatted = tokens.map(token => {
+              if (token === '.') return '.';
+              if (token === '|') return '|';
 
-            const bassNote = this.transposeChord(
-              this.convertNumberToNote(bass),
-              step
-            );
+              return this.transposeChord(
+                this.convertNumberChord(token),
+                step
+              );
+            }).join(' ');
 
-            chordConverted = `${mainChord}/${bassNote}`;
+            chordConverted = `[${formatted}]`;
+
           } else {
-            chordConverted = this.transposeChord(
-              this.convertNumberChord(chordRaw),
-              step
-            );
+            if (content.includes('/')) {
+              const [main, bass] = content.split('/');
+
+              const mainChord = this.transposeChord(
+                this.convertNumberChord(main),
+                step
+              );
+
+              const bassNote = this.transposeChord(
+                this.convertNumberToNote(bass),
+                step
+              );
+
+              chordConverted = `${mainChord}/${bassNote}`;
+            } else {
+              chordConverted = this.transposeChord(
+                this.convertNumberChord(content),
+                step
+              );
+            }
           }
 
-          const start = matches[i].index! + matches[i][0].length;
+          const start = matches[i].index! + raw.length;
           const end = i + 1 < matches.length ? matches[i + 1].index! : line.length;
 
           row.push({

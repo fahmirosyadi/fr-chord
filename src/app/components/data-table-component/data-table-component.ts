@@ -1,79 +1,72 @@
-import { Component, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import {
+	Component,
+	Input,
+	Output,
+	EventEmitter,
+	OnChanges,
+	SimpleChanges,
+} from '@angular/core';
+
 import { SharedModule } from '../../shared.module';
 
 export interface TableColumn {
-  key: string;
-  label: string;
+	key: string;
+	label: string;
 }
 
 @Component({
-  selector: 'app-data-table',
-  standalone: true,
-  imports: [SharedModule],
-  templateUrl: './data-table-component.html',
+	selector: 'app-data-table',
+	standalone: true,
+	imports: [SharedModule],
+	templateUrl: './data-table-component.html',
 })
-export class DataTableComponent implements AfterViewInit {
+export class DataTableComponent implements OnChanges {
 
-  @Input() columns: TableColumn[] = [];
-  @Input() data: any[] = [];
+	@Input() columns: TableColumn[] = [];
+	@Input() data: any[] = [];
 
-  @Input() showActions = false;
-  @Output() edit = new EventEmitter<any>();
-  @Output() view = new EventEmitter<any>();
+	@Input() loading = false;
 
-  onView(row: any) {
-    this.view.emit(row);
-  }
+	@Output() search = new EventEmitter<string>();
 
-  onEdit(row: any) {
-    this.edit.emit(row);
-  }
+	@Input() showActions = false;
+	@Output() edit = new EventEmitter<any>();
+	@Output() view = new EventEmitter<any>();
 
-  dataSource = new MatTableDataSource<any>();
+	displayedColumns: string[] = [];
 
-  displayedColumns: string[] = [];
+	ngOnChanges(changes: SimpleChanges) {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+		this.displayedColumns = this.columns.map(c => c.key);
 
-  ngOnChanges() {
+		if (this.showActions) {
+			this.displayedColumns.push('actions');
+		}
 
-    this.dataSource.data = this.data;
+	}
 
-    this.displayedColumns = this.columns.map(c => c.key);
+	onView(row: any) {
+		this.view.emit(row);
+	}
 
-    if (this.showActions) {
-      this.displayedColumns.push('actions');
-    }
+	onEdit(row: any) {
+		this.edit.emit(row);
+	}
 
-    this.dataSource.filterPredicate = (data, filter) => {
-      const search = JSON.stringify(data).toLowerCase();
-      return search.includes(filter);
-    };
+	onSearch(event: Event) {
 
-  }
+		const value = (event.target as HTMLInputElement).value;
 
-  ngAfterViewInit() {
+		this.search.emit(value);
 
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+	}
 
-  }
+	getValue(obj: any, path: string) {
 
-  applyFilter(event: Event) {
+		return path
+			.split('.')
+			.reduce((o, key) => o?.[key], obj);
 
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-  }
-
-  getValue(obj: any, path: string) {
-
-    return path.split('.').reduce((o, key) => o?.[key], obj);
-
-  }
+	}
 
 }
