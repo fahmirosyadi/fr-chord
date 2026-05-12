@@ -1,27 +1,53 @@
 <div class="page">
 
-  <!-- 🔍 Sticky Search Bar -->
-  <div class="search-bar">
-    <mat-icon>search</mat-icon>
-    <input
-      type="text"
-      placeholder="Search songs..."
-      [(ngModel)]="search"
-    />
-  </div>
+	<!-- SEARCH -->
 
-  <!-- 📄 Song List -->
-  <div class="song-list">
-    @for (song of filteredData; track $index) {
-      <div
-        class="song-item"
-        (click)="viewSong(song)"
-        matRipple
-      >
-        <div class="title">{{ song.title }}</div>
-        <div class="artist">{{ song.artist }}</div>
-      </div>
-    }
-  </div>
+	<div class="search-bar">
+
+		<mat-icon>search</mat-icon>
+
+		<input
+			type="text"
+			placeholder="Search songs..."
+			[(ngModel)]="search"
+			(input)="onSearch(search)"
+		/>
+
+	</div>
+
+	<!-- SONG LIST -->
+
+	<div class="song-list">
+
+		@if (loading) {
+
+			<div class="loading">
+				Loading...
+			</div>
+
+		} @else {
+
+			@for (song of data; track song.id) {
+
+				<div
+					class="song-item"
+					(click)="viewSong(song)"
+					matRipple>
+
+					<div class="title">
+						{{ song.title }}
+					</div>
+
+					<div class="artist">
+						{{ song.artist }}
+					</div>
+
+				</div>
+
+			}
+
+		}
+
+	</div>
 
 </div>

@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   exports: [
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     MatCardModule,
     RouterModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    MatMenuModule
   ]
 })
 export class SharedModule {}

@@ -7,6 +7,7 @@ import { Song } from '../../models/song.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../services/auth-service';
 import { PageEvent } from '@angular/material/paginator';
+import { PaginatedComponent } from '../../components/parent-component/paginated-component';
 
 @Component({
   selector: 'app-song',
@@ -15,17 +16,8 @@ import { PageEvent } from '@angular/material/paginator';
   templateUrl: './song-component.html',
   styleUrl: './song-component.scss'
 })
-export class SongComponent implements OnInit {
+export class SongComponent  extends PaginatedComponent<Song>  implements OnInit {
 
-  data: any[] = [];
-
-  total = 0;
-
-  pageIndex = 0;
-  pageSize = 10;
-
-  loading = false;
-  search = '';
 
   allColumns: TableColumn[] = [
     // { key: 'id', label: 'ID' },
@@ -46,47 +38,23 @@ export class SongComponent implements OnInit {
 
   columns: TableColumn[] = [];
 
-  constructor(private service: SongService, private authService: AuthService, private router: Router, private breakpointObserver: BreakpointObserver) {}
+  constructor(private service: SongService, private authService: AuthService, private router: Router, private breakpointObserver: BreakpointObserver) {
+    super();
+  }
 
   async ngOnInit() {
     await this.loadData();
 
     this.breakpointObserver.observe([Breakpoints.Handset])
-      .subscribe(result => {
-        this.columns = result.matches
-          ? this.mobileColumns
-          : this.allColumns;
-      });
+    .subscribe(result => {
+      this.columns = result.matches
+      ? this.mobileColumns
+      : this.allColumns;
+    });
   }
 
-  async loadData() {
-    this.loading = true;
-
-    try {
-      const result = await this.service.getPaged(
-        this.pageIndex,
-        this.pageSize,
-        this.search
-      );
-
-      this.data = result.data;
-      this.total = result.total;
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  async onPageChange(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-
-    await this.loadData();
-  }
-
-  onSearch(value: string) {
-    this.search = value;
-    this.pageIndex = 0;
-    this.loadData();
+  protected override fetchData(): Promise<{ data: Song[]; total: number; }> {
+    return this.service.getPaged(this.pageIndex, this.pageSize, this.search);
   }
 
   editSong(song: Song) {
