@@ -27,7 +27,7 @@ export class SongListComponent extends PaginatedComponent<Song> implements OnIni
 	}
 
   protected override fetchData(): Promise<{ data: Song[]; total: number; }> {
-    return this.service.getPaged(this.page, this.pageSize, this.search);
+    return this.service.getPaged(this.page, this.pageSize, this.search, 1);
   }
 
 	viewSong(song: Song) {

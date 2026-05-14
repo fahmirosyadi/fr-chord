@@ -23,6 +23,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
     // { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
+    { key: 'status', label: 'Status' },
     { key: 'genre.name', label: 'Genre' },
     { key: 'key', label: 'Key' },
     { key: 'lowestNote', label: 'Lowest Note' },

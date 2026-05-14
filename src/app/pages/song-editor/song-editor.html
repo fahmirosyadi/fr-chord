@@ -32,6 +32,20 @@
         <mat-label>Highest Note</mat-label>
         <input matInput [(ngModel)]="song.highestNote">
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="song.status">
+
+          <mat-option [value]="0">
+            Unfinished
+          </mat-option>
+
+          <mat-option [value]="1">
+            Finished
+          </mat-option>
+
+        </mat-select>
+      </mat-form-field>
     </mat-card>
     <mat-card class="grid gap-3 lg-col-span-3">
       <div class="grid grid-cols-3 gap-2" style="width: 200px;">

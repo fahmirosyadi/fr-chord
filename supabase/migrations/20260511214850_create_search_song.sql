@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS search_song(text);
-create or replace function search_song(search_term text)
+create or replace function search_song(search_term text, status_filter integer default null)
 returns table (
 	id bigint,
 	title text,
@@ -10,6 +10,7 @@ returns table (
 	lowest_note text,
 	highest_note text,
 	chord text,
+	status text,
 	user_id uuid,
 	created_at timestamptz
 )
@@ -33,6 +34,10 @@ as $$
 		s.lowest_note,
 		s.highest_note,
 		s.chord,
+    case
+      when s.status = 0 then 'Unfinished'
+      when s.status = 1 then 'Finished'
+    end as status,
 		s.user_id,
 		s.created_at
 
@@ -45,16 +50,22 @@ as $$
 		on p.id = s.user_id
 
 	where
-		search_term = ''
-		or search_term is null
-		or (
-			s.search_vector @@ plainto_tsquery(search_term)
-			or similarity(s.title, search_term) > 0.3
-			or similarity(s.artist, search_term) > 0.3
+		(
+      search_term = ''
+      or search_term is null
+      or (
+        s.search_vector @@ plainto_tsquery(search_term)
+        or similarity(s.title, search_term) > 0.3
+        or similarity(s.artist, search_term) > 0.3
 
-      or s.title ilike '%' || search_term || '%'
-		  or s.artist ilike '%' || search_term || '%'
-		)
+        or s.title ilike '%' || search_term || '%'
+        or s.artist ilike '%' || search_term || '%'
+      )
+    )
+    and (
+      status_filter is null
+      or s.status = status_filter
+    )
 
 	order by
 		case

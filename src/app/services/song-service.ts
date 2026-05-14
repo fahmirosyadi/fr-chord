@@ -18,7 +18,8 @@ export class SongService {
 	async getPaged(
     page: number,
     pageSize: number,
-    search: string = ''
+    search: string = '',
+    status?: number
   ) {
 
     const from = page * pageSize;
@@ -26,7 +27,8 @@ export class SongService {
 
     const { data, error } = await this.query
       .rpc('search_song', {
-        search_term: search
+        search_term: search,
+        status_filter: status
       });
 
     if (error) {
