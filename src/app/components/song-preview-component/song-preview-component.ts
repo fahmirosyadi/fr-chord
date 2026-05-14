@@ -61,13 +61,13 @@ export class SongPreviewComponent {
   @HostListener('window:keydown', ['$event'])
   handleKey(event: KeyboardEvent) {
 
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      this.nextPart();
-    }
+    // if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    //   this.nextPart();
+    // }
 
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-      this.prevPart();
-    }
+    // if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    //   this.prevPart();
+    // }
 
   }
 
