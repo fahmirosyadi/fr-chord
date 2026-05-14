@@ -6,6 +6,7 @@ import { Supabase } from '../../services/supabase';
 import { SongService } from '../../services/song-service';
 import { Song } from '../../models/song.model';
 import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-song-editor',
@@ -20,7 +21,7 @@ export class SongEditor implements OnInit {
 
   song = new Song();
 
-  constructor(private route: ActivatedRoute, private router: Router, public service: SongService) {}
+  constructor(private route: ActivatedRoute, private router: Router, public service: SongService, private snackBar: MatSnackBar) {}
 
   async ngOnInit() {
 
@@ -40,7 +41,12 @@ export class SongEditor implements OnInit {
       await this.service.create(this.song);
     }
 
-    this.router.navigate(['/song']);
+    // this.router.navigate(['/song']);
+    this.snackBar.open('Song saved!', 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center'
+    });
 
   }
 

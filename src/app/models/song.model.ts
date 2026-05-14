@@ -54,11 +54,28 @@ export class Song extends BaseModel {
   }
 
   convertNumberToNote(input: string): string {
-    const match = input.match(/^([1-7])$/);
+
+    const match = input.match(/^([1-7])([#b]?)$/);
     if (!match) return input;
 
     const degree = parseInt(match[1], 10) - 1;
-    return this.getScale(this.tmpCurrentKey)[degree];
+    const accidental = match[2];
+
+    const scale = this.getScale(this.tmpCurrentKey);
+
+    let note = scale[degree];
+
+    if (accidental === '#') {
+      const idx = Song.CHORDS.indexOf(note);
+      note = Song.CHORDS[(idx + 1) % 12];
+    }
+
+    if (accidental === 'b') {
+      const idx = Song.CHORDS.indexOf(note);
+      note = Song.CHORDS[(idx - 1 + 12) % 12];
+    }
+
+    return note;
   }
 
   convertNumberChord(input: string): string {
@@ -68,8 +85,11 @@ export class Song extends BaseModel {
       .replace(/-m-7/gi, 'm7')
       .replace(/-/g, '');
 
+    // const match = input.match(
+    //   /^([1-7])([#b]?)(dim|aug|sus[24]?|add\d+|M|m)?([a-zA-Z0-9]*)?(?:\/([1-7]))?$/
+    // );
     const match = input.match(
-      /^([1-7])([#b]?)(dim|aug|sus[24]?|add\d+|M|m)?([a-zA-Z0-9]*)?(?:\/([1-7]))?$/
+      /^([1-7])([#b]?)(dim|aug|sus[24]?|add\d+|M|m)?([a-zA-Z0-9]*)?(?:\/([1-7][#b]?))?$/
     );
 
     if (!match) return input;
@@ -111,7 +131,18 @@ export class Song extends BaseModel {
     let chord = root + suffix + extension;
 
     if (bassRaw) {
-      const bassNote = scale[parseInt(bassRaw, 10) - 1];
+      let bassDegree = parseInt(bassRaw[0], 10) - 1;
+      let bassNote = scale[bassDegree];
+
+      if (bassRaw.includes('#')) {
+        const idx = Song.CHORDS.indexOf(bassNote);
+        bassNote = Song.CHORDS[(idx + 1) % 12];
+      }
+
+      if (bassRaw.includes('b')) {
+        const idx = Song.CHORDS.indexOf(bassNote);
+        bassNote = Song.CHORDS[(idx - 1 + 12) % 12];
+      }
       chord += `/${bassNote}`;
     }
 

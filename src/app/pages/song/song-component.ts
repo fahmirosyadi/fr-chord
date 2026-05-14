@@ -26,8 +26,8 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
     { key: 'status', label: 'Status' },
     { key: 'genre.name', label: 'Genre' },
     { key: 'key', label: 'Key' },
-    { key: 'lowestNote', label: 'Lowest Note' },
-    { key: 'highestNote', label: 'Highest Note' },
+    { key: 'lowest_note', label: 'Lowest Note' },
+    { key: 'highest_note', label: 'Highest Note' },
     { key: 'profiles.full_name', label: 'Creator' },
   ];
 
