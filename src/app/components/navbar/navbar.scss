@@ -1,4 +1,3 @@
-// navbar.component.scss
 mat-toolbar {
   position: sticky;
   top: 0;
@@ -16,12 +15,6 @@ mat-toolbar {
   gap: 2px;
 }
 
-.app-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-right: 20px;
-}
-
 .toolbar-center {
   flex: 1;
   display: flex;
@@ -35,8 +28,28 @@ mat-toolbar {
 }
 
 .app-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 20px;
+  text-decoration: none;
+  color: inherit;
+}
 
-	text-decoration: none;
-	color: inherit;
+.desktop-menu {
+  display: flex;
+  align-items: center;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .desktop-menu {
+    display: none;
+  }
+
+  .app-title {
+    margin-right: 0;
+    font-size: 16px;
+  }
 
 }

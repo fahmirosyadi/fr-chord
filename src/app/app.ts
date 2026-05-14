@@ -21,7 +21,7 @@ import { filter } from 'rxjs/operators';
     MatListModule,
     RouterOutlet,
     NavbarComponent
-  ],
+],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']               // ✅ plural
 })
@@ -29,8 +29,9 @@ export class App {
   showNavbar = true;
   protected readonly title = signal('fr-system-fe');
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
+  sidenavOpened = false;
 
-  constructor(private themeService: ThemeService, private router: Router) {
+  constructor(public themeService: ThemeService, private router: Router) {
     this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: any) => {

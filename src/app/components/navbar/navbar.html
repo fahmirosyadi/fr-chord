@@ -9,16 +9,21 @@
     <a
       routerLink="/"
       class="app-title">
-
-
       FR Chord
-
     </a>
 
-    <button mat-button [matMenuTriggerFor]="themeMenu">
-      Theme
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
+    <!-- DESKTOP ONLY -->
+    <div class="desktop-menu">
+      <button mat-button [matMenuTriggerFor]="themeMenu">
+        Theme
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <button mat-button [matMenuTriggerFor]="masterMenu">
+        Master
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+    </div>
 
     <mat-menu #themeMenu="matMenu">
       @for (theme of themeService.THEMES; track theme) {
@@ -32,33 +37,19 @@
       }
     </mat-menu>
 
-    <button mat-button [matMenuTriggerFor]="masterMenu">
-      Master
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-
     <mat-menu #masterMenu="matMenu">
       <button mat-menu-item routerLink="/role">Role</button>
       <button mat-menu-item routerLink="/user">User</button>
       <button mat-menu-item routerLink="/genre">Genre</button>
       <button mat-menu-item routerLink="/song">Song</button>
     </mat-menu>
-
-
   </div>
-
 
   <!-- CENTER -->
-  <div class="toolbar-center">
-
-
-
-  </div>
-
+  <div class="toolbar-center"></div>
 
   <!-- RIGHT -->
-  <div class="toolbar-right">
-
+  <div class="toolbar-right desktop-menu">
     <button mat-button [matMenuTriggerFor]="profileMenu">
       <mat-icon>account_circle</mat-icon>
       Profile
@@ -76,7 +67,6 @@
         Logout
       </button>
     </mat-menu>
-
   </div>
 
 </mat-toolbar>
