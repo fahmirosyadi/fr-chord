@@ -27,6 +27,7 @@ export class Song extends BaseModel {
   key: string = 'C';
   tmpCurrentKey: string = 'C';
   preferredKey?: string;
+  originalKey?: string;
   lowestNote?: string;
   highestNote?: string;
   status?: number;
