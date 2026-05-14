@@ -1,9 +1,26 @@
 <div class="preview">
 
   <div class="song-title">{{ song.title }}</div>
-
   @for (part of song.parts; track $index) {
-    <app-part-preview [part]="part"></app-part-preview>
+    <div class="part-item" [attr.id]="'part-' + $index" (click)="scrollToPart($index)">
+
+      <div class="part-card">
+
+        <div class="part-header">
+          <h3>{{ part.label() }}</h3>
+        </div>
+
+        <div class="part-body">
+          <app-part-preview [part]="part" [showTitle]="false"></app-part-preview>
+        </div>
+
+      </div>
+
+    </div>
   }
+
+  <!-- @for (part of song.parts; track $index) {
+    <app-part-preview [part]="part"></app-part-preview>
+  } -->
 
 </div>

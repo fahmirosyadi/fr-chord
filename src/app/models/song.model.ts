@@ -87,11 +87,12 @@ export class Song extends BaseModel {
           : Song.CHORDS[(index - 1 + 12) % 12];
     }
 
-    if (qualityOverride === 'M') qualityOverride = '';
+    const explicitMajor = qualityOverride === 'M';
+
     if (qualityOverride === 'm') qualityOverride = 'm';
 
     const defaultQualities = ['M', 'm', 'm', 'M', 'M', 'm', 'dim'];
-    let quality = qualityOverride || defaultQualities[degree];
+    let quality = explicitMajor ? 'M' : (qualityOverride || defaultQualities[degree]);
 
     let suffix = '';
 

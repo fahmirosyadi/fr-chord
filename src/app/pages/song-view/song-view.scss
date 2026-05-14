@@ -21,6 +21,21 @@ hr {
   margin: 20px 0;
 }
 
+.parts-scroll-vertical {
+  // height: calc(110vh - 200px); /* adjust to your layout */
+  height: '100%';
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  padding-right: 0.5rem;
+}
+
+
+.part-item {
+  scroll-snap-align: start;
+  padding-bottom: 2rem;
+}
+
 @media (max-width: 1024px) {
 
 	.song-controls {
@@ -53,6 +68,13 @@ hr {
     // border-top: 1px solid #e0e0e0;
 
     z-index: 1000;
+  }
+
+  #desktop-preview {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
   }
 
 }

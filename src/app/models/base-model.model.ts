@@ -33,6 +33,8 @@ export class BaseModel {
     Object.keys(this).forEach(key => {
 
       if (key === 'id') return;
+      if (key === 'search_vector') return;
+      if (key === 'searchVector') return;
 
       const value = (this as any)[key];
 

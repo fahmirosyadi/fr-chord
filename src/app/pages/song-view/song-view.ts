@@ -1,21 +1,24 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { SharedModule } from '../../shared.module';
 import { Song } from '../../models/song.model';
 import { SongService } from '../../services/song-service';
 import { PartPreviewComponent } from '../../components/part-preview-component/part-preview-component';
+import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
 
 @Component({
   selector: 'app-song-view',
   standalone: true,
-  imports: [SharedModule, PartPreviewComponent],
+  imports: [SharedModule, PartPreviewComponent, SongPreviewComponent],
   templateUrl: './song-view.html',
   styleUrl: './song-view.scss'
 })
 export class SongView implements OnInit {
 
   currentIndex = 0;
+  @ViewChild('partsContainer', { static: false })
+  partsContainer!: ElementRef<HTMLDivElement>;
 
   song = new Song();
 
@@ -42,19 +45,38 @@ export class SongView implements OnInit {
   }
 
   nextPart() {
-
     if (this.currentIndex < this.song.parts.length - 1) {
-      this.currentIndex++;
+      this.scrollToPart(this.currentIndex + 1);
     }
-
   }
 
   prevPart() {
-
     if (this.currentIndex > 0) {
-      this.currentIndex--;
+      this.scrollToPart(this.currentIndex - 1);
     }
+  }
 
+  scrollNext() {
+    const el = this.partsContainer.nativeElement;
+
+    const item = el.querySelector('.part-item') as HTMLElement;
+    if (!item) return;
+
+    const height = item.offsetHeight;
+
+    el.scrollBy({ top: height, behavior: 'smooth' });
+  }
+
+  scrollToPart(index: number) {
+    const el = document.getElementById('part-' + index);
+    if (!el) return;
+
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+
+    this.currentIndex = index;
   }
 
   selectPart(i: number) {
