@@ -35,6 +35,7 @@ export class BaseModel {
       if (key === 'id') return;
       if (key === 'search_vector') return;
       if (key === 'searchVector') return;
+      if (key.startsWith('tmp')) return;
 
       const value = (this as any)[key];
 

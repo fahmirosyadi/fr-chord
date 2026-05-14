@@ -61,6 +61,9 @@ export class SongService {
 
     if (error) throw error;
     const result = new Song(data);
+    if(result.preferredKey) {
+      result.tmpCurrentKey = result.preferredKey;
+    }
     console.log(result)
     return result;
   }

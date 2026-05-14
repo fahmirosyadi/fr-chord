@@ -25,6 +25,8 @@ export class Song extends BaseModel {
   artist?: string;
   chord: string = '';
   key: string = 'C';
+  tmpCurrentKey: string = 'C';
+  preferredKey?: string;
   lowestNote?: string;
   highestNote?: string;
   status?: number;
@@ -37,6 +39,7 @@ export class Song extends BaseModel {
     super(data);
     if (data) {
       Object.assign(this, this.toCamelCase(data));
+      this.tmpCurrentKey = this.key;
     }
   }
 
@@ -54,7 +57,7 @@ export class Song extends BaseModel {
     if (!match) return input;
 
     const degree = parseInt(match[1], 10) - 1;
-    return this.getScale(this.key)[degree];
+    return this.getScale(this.tmpCurrentKey)[degree];
   }
 
   convertNumberChord(input: string): string {
@@ -76,7 +79,7 @@ export class Song extends BaseModel {
     let extension = match[4] || '';
     const bassRaw = match[5];
 
-    const scale = this.getScale(this.key);
+    const scale = this.getScale(this.tmpCurrentKey);
     let root = scale[degree];
 
     // ✅ apply accidental BEFORE transpose
@@ -137,8 +140,38 @@ export class Song extends BaseModel {
   }
 
   transpose(step: number) {
-    const index = Song.CHORDS.indexOf(this.key);
-    this.key = Song.CHORDS[(index + step + 12) % 12];
+    const index = Song.CHORDS.indexOf(this.tmpCurrentKey);
+    this.tmpCurrentKey = Song.CHORDS[(index + step + 12) % 12];
+  }
+
+  getTransposeValue() {
+
+    const actualKey = Song.CHORDS.indexOf(this.key);
+    const currentIndex = Song.CHORDS.indexOf(this.tmpCurrentKey || this.key);
+
+    if (actualKey === -1 || currentIndex === -1) {
+      return 0;
+    }
+
+    let diff = (actualKey - currentIndex) % 12;
+    if(diff > 0) {
+      diff -= 12;
+    }
+    return diff;
+  }
+
+  transposeTo(targetKey: string) {
+
+    const currentIndex = Song.CHORDS.indexOf(this.tmpCurrentKey);
+    const targetIndex = Song.CHORDS.indexOf(targetKey);
+
+    if (currentIndex === -1 || targetIndex === -1) {
+      return;
+    }
+
+    const step = targetIndex - currentIndex;
+
+    this.transpose(step);
   }
 
   get parts(): SongPart[] {

@@ -25,6 +25,14 @@
         <input matInput [(ngModel)]="song.artist">
       </mat-form-field>
       <mat-form-field>
+        <mat-label>Key</mat-label>
+        <input matInput [(ngModel)]="song.key">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Preferred Key</mat-label>
+        <input matInput [(ngModel)]="song.preferredKey">
+      </mat-form-field>
+      <mat-form-field>
         <mat-label>Lowest Note</mat-label>
         <input matInput [(ngModel)]="song.lowestNote">
       </mat-form-field>
@@ -48,10 +56,11 @@
       </mat-form-field>
     </mat-card>
     <mat-card class="grid gap-3 lg-col-span-3">
-      <div class="grid grid-cols-3 gap-2" style="width: 200px;">
+      <div class="grid grid-cols-4 gap-2" style="width: 300px;">
         <button mat-raised-button (click)="song.transpose(-1)">-</button>
-        <button mat-raised-button disabled="">{{song.key}}</button>
+        <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
         <button mat-raised-button (click)="song.transpose(1)">+</button>
+        <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
       </div>
       <div class="grid lg-grid-cols-2 gap-5">
         <mat-form-field>

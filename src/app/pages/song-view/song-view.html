@@ -3,10 +3,11 @@
   (swipeleft)="nextPart()"
   (swiperight)="prevPart()">
   <div class="grid lg-grid-cols-3 gap-3">
-    <div class="grid grid-cols-3 gap-2" style="width: 200px;">
+    <div class="grid grid-cols-4 gap-2" style="width: 300px;">
       <button mat-raised-button (click)="song.transpose(-1)">-</button>
-      <button mat-raised-button disabled="">{{song.key}}</button>
+      <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
       <button mat-raised-button (click)="song.transpose(1)">+</button>
+      <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
     </div>
 		<mat-card class="col-span-1 lg-col-span-3" id="desktop-preview">
       <app-song-preview [song]="song"></app-song-preview>

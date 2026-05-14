@@ -38,6 +38,9 @@ export class SongView implements OnInit {
 
       if (song) {
         this.song = new Song(song);
+        if(this.song.preferredKey) {
+          this.song.tmpCurrentKey = this.song.preferredKey;
+        }
       }
 
     }
