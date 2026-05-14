@@ -67,5 +67,5 @@ as $$
 			)
 		end desc,
 
-		s.created_at desc;
+		s.title asc;
 $$;
