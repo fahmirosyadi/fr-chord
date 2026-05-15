@@ -6,6 +6,7 @@ import { Song } from '../../models/song.model';
 import { SongService } from '../../services/song-service';
 import { PartPreviewComponent } from '../../components/part-preview-component/part-preview-component';
 import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-song-view',
@@ -25,7 +26,8 @@ export class SongView implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private service: SongService
+    private service: SongService,
+    private sanitizer: DomSanitizer
   ) {}
 
   async ngOnInit() {
@@ -44,6 +46,29 @@ export class SongView implements OnInit {
       }
 
     }
+
+  }
+
+  get youtubeEmbedUrl(): SafeResourceUrl | null {
+
+    if (!this.song?.youtubeUrl) {
+      return null;
+    }
+    let url = this.song.youtubeUrl.trim();
+    const match = url.match(
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/i
+    );
+
+    if (!match) {
+      return null;
+    }
+
+    const videoId = match[1];
+
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://www.youtube.com/embed/${videoId}`
+
+    );
 
   }
 

@@ -31,6 +31,7 @@ export class Song extends BaseModel {
   lowestNote?: string;
   highestNote?: string;
   status?: number;
+  youtubeUrl?: string;
 
   static readonly CHORDS = [
     'C','C#','D','D#','E','F','F#','G','G#','A','A#','B'
