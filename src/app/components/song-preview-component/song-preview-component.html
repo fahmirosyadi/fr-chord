@@ -1,6 +1,16 @@
 <div class="preview">
 
   <div class="song-title">{{ song.title }}</div>
+  @if (song.redirectUrl) {
+    <a
+      href="{{ song.redirectUrl }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="redirect-link"
+    >
+      The chord is not available here yet. Please go to this page to view it.
+    </a>
+  }
   @for (part of song.parts; track $index) {
     <div class="part-item" [attr.id]="'part-' + $index" (click)="scrollToPart($index)">
 
