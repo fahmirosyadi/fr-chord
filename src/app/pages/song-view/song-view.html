@@ -2,7 +2,7 @@
   class=""
   (swipeleft)="nextPart()"
   (swiperight)="prevPart()">
-  <div class="grid lg-grid-cols-3 gap-3">
+  <div class="">
     @if (youtubeEmbedUrl) {
       <div class="col-span-3">
         <iframe
@@ -15,7 +15,7 @@
         </iframe>
       </div>
     }
-    <div class="grid grid-cols-4 gap-2" style="width: 300px;">
+    <div class="grid grid-cols-4 gap-2" style="width: 300px; margin-top: 20px; margin-bottom: 20px;">
       <button mat-raised-button (click)="song.transpose(-1)">-</button>
       <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
       <button mat-raised-button (click)="song.transpose(1)">+</button>
