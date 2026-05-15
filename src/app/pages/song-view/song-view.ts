@@ -20,6 +20,7 @@ export class SongView implements OnInit {
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
+  youtubeEmbedUrl: SafeResourceUrl | null = null;
 
   song = new Song();
 
@@ -40,6 +41,7 @@ export class SongView implements OnInit {
 
       if (song) {
         this.song = new Song(song);
+        this.setYoutubeUrl();
         if(this.song.preferredKey) {
           // this.song.tmpCurrentKey = this.song.preferredKey;
         }
@@ -49,27 +51,29 @@ export class SongView implements OnInit {
 
   }
 
-  get youtubeEmbedUrl(): SafeResourceUrl | null {
+  setYoutubeUrl() {
 
     if (!this.song?.youtubeUrl) {
-      return null;
+      this.youtubeEmbedUrl = null;
+      return;
     }
-    let url = this.song.youtubeUrl.trim();
+
+    const url = this.song.youtubeUrl.trim();
+
     const match = url.match(
       /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/i
     );
 
     if (!match) {
-      return null;
+      this.youtubeEmbedUrl = null;
+      return;
     }
 
     const videoId = match[1];
 
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
+    this.youtubeEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       `https://www.youtube.com/embed/${videoId}`
-
     );
-
   }
 
   nextPart() {
