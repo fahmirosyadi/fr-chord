@@ -26,6 +26,7 @@ export const routes: Routes = [
     path: 'reset-password',
     component: ResetPasswordComponent
   },
+  { path: 'song-view/:id', component: SongView },
   {
     path: '',
     canActivate: [authGuard],
@@ -35,7 +36,6 @@ export const routes: Routes = [
       { path: 'song', component: SongComponent },
       { path: 'song-editor', component: SongEditor },
       { path: 'song-editor/:id', component: SongEditor },
-      { path: 'song-view/:id', component: SongView },
     ]
   },
 ];
