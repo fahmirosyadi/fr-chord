@@ -37,7 +37,7 @@ export class SongView implements OnInit {
 
     if (id) {
 
-      const song = await this.service.getById(id);
+      const song = await this.service.getById(parseInt(id));
 
       if (song) {
         this.song = new Song(song);

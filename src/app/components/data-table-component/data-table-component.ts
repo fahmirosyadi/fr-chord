@@ -32,7 +32,7 @@ export class DataTableComponent implements OnChanges {
 	@Input() showActions = false;
 	@Output() edit = new EventEmitter<any>();
 	@Output() view = new EventEmitter<any>();
-
+	@Output() delete = new EventEmitter<any>();
 	displayedColumns: string[] = [];
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -52,6 +52,10 @@ export class DataTableComponent implements OnChanges {
 	onEdit(row: any) {
 		this.edit.emit(row);
 	}
+
+  onDelete(row: any) {
+    this.delete.emit(row);
+  }
 
 	onSearch(event: Event) {
 

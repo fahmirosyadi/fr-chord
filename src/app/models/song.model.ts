@@ -20,7 +20,7 @@ export interface SongLine {
 }
 
 export class Song extends BaseModel {
-  id?: number;
+  id!: number;
   title?: string;
   artist?: string;
   chord: string = '';

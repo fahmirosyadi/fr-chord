@@ -54,7 +54,7 @@ export class SongService {
     return data.map(d => new Song(d)) ?? [];
   }
 
-  async getById(id: string): Promise<Song> {
+  async getById(id: number): Promise<Song> {
 
     const { data, error } = await this.query
       .from('song').select('*').eq('id', id).single();
@@ -76,7 +76,7 @@ export class SongService {
     if (error) throw error;
   }
 
-  async update(id: string, song: Song): Promise<void> {
+  async update(id: number, song: Song): Promise<void> {
     console.log(song, song.payload)
     const payload = song.payload;
     const { error } = await this.query
@@ -85,7 +85,7 @@ export class SongService {
     if (error) throw error;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
 
     const { error } = await this.query
       .from('song').delete().eq('id', id);

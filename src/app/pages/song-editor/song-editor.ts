@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SongEditor implements OnInit {
 
-  songId: string | null = null;
+  songId: number | null = null;
 
   song = new Song();
 
@@ -25,9 +25,10 @@ export class SongEditor implements OnInit {
 
   async ngOnInit() {
 
-    this.songId = this.route.snapshot.paramMap.get('id');
+    const songId = this.route.snapshot.paramMap.get('id');
 
-    if (this.songId) {
+    if (songId) {
+      this.songId = parseInt(songId);
       this.song = await this.service.getById(this.songId);
     }
 

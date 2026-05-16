@@ -20,7 +20,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
 
 
   allColumns: TableColumn[] = [
-    // { key: 'id', label: 'ID' },
+    { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
     { key: 'status', label: 'Status' },
@@ -32,6 +32,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
   ];
 
   mobileColumns: TableColumn[] = [
+    { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
     { key: 'profiles.full_name', label: 'Creator' },
@@ -61,6 +62,13 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
   editSong(song: Song) {
     console.log('song:', song);
     this.router.navigate(['/song-editor', song.id]);
+  }
+
+  async deleteSong(song: Song) {
+    if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
+      await this.service.delete(song.id);
+      await this.loadData();
+    }
   }
 
   viewSong(song: Song) {
