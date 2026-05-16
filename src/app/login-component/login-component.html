@@ -15,6 +15,13 @@
           <input matInput [(ngModel)]="password" name="password" type="password" required />
         </mat-form-field>
 
+        <!-- FORGOT PASSWORD -->
+        <div style="text-align: right; margin-bottom: 16px;">
+          <a routerLink="/forgot-password">
+            Forgot Password?
+          </a>
+        </div>
+
         <button mat-raised-button color="primary" type="submit" class="full-width">
           Login
         </button>

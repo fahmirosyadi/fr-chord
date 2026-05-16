@@ -9,6 +9,7 @@ import { authGuard } from './auth-guard';
 import { LoginComponent } from './login-component/login-component';
 import { RegisterComponent } from './pages/register-component/register-component';
 import { SongListComponent } from './pages/song-list-component/song-list-component';
+import { ResetPasswordComponent } from './pages/reset-password-component/reset-password-component';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
@@ -19,6 +20,11 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  // ADD THIS
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent
   },
   {
     path: '',

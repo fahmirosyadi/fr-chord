@@ -46,4 +46,19 @@ export class AuthService {
 		const { data } = await this.supabase.auth.getSession();
 		return data.session;
   }
+
+  // SEND RESET EMAIL
+  async forgotPassword(email: string) {
+    return await this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'http://localhost:4200/reset-password'
+    });
+  }
+
+  // UPDATE PASSWORD AFTER REDIRECT
+  async updatePassword(newPassword: string) {
+    return await this.supabase.auth.updateUser({
+      password: newPassword
+    });
+  }
+
 }
