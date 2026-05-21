@@ -129,3 +129,23 @@ mat-card{
 .clickable-row:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
+
+
+@media (max-width: 768px) {
+  html,
+  body {
+    font-size: 13px;
+  }
+
+  .page {
+    padding: 16px;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  mat-card {
+    padding: 16px;
+  }
+}
