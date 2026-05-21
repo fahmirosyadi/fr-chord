@@ -134,11 +134,11 @@ mat-card{
 @media (max-width: 768px) {
   html,
   body {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .page {
-    padding: 16px;
+    padding: 18px;
   }
 
   mat-form-field {
@@ -146,6 +146,6 @@ mat-card{
   }
 
   mat-card {
-    padding: 16px;
+    padding: 18px;
   }
 }
