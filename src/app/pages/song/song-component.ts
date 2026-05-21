@@ -20,7 +20,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
 
 
   allColumns: TableColumn[] = [
-    { key: 'id', label: 'ID' },
+    { key: 'id', label: 'ID', hidden: true },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
     { key: 'status', label: 'Status' },
@@ -32,7 +32,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
   ];
 
   mobileColumns: TableColumn[] = [
-    { key: 'id', label: 'ID' },
+    { key: 'id', label: 'ID', hidden: true },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
     // { key: 'profiles.full_name', label: 'Creator' },

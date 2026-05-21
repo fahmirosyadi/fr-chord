@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared.module';
 export interface TableColumn {
 	key: string;
 	label: string;
+  hidden?: boolean;
 }
 
 @Component({
@@ -37,7 +38,9 @@ export class DataTableComponent implements OnChanges {
 
 	ngOnChanges(changes: SimpleChanges) {
 
-		this.displayedColumns = this.columns.map(c => c.key);
+		this.displayedColumns = this.columns
+      .filter(c => !c.hidden)
+      .map(c => c.key);
 
 		if (this.showActions) {
 			this.displayedColumns.push('actions');
