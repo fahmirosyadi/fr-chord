@@ -35,7 +35,7 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
     { key: 'id', label: 'ID' },
     { key: 'title', label: 'Title' },
     { key: 'artist', label: 'Artist' },
-    { key: 'profiles.full_name', label: 'Creator' },
+    // { key: 'profiles.full_name', label: 'Creator' },
   ];
 
   columns: TableColumn[] = [];
