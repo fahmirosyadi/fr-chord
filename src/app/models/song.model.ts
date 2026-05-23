@@ -300,9 +300,7 @@ export class Song extends BaseModel {
           let chordConverted = '';
 
           if (isBar) {
-            const tokens = content.includes(' ')
-              ? content.split(/\s+/)
-              : content.split('');
+            const tokens = content.trim().split(/\s+/);
 
             const formatted = tokens.map(token => {
               if (token === '.') return '.';

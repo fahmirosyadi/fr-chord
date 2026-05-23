@@ -40,6 +40,18 @@ mat-toolbar {
   align-items: center;
 }
 
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.app-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
 

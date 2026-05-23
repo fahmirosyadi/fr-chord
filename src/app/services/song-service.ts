@@ -68,12 +68,20 @@ export class SongService {
     return result;
   }
 
-  async create(song: Song): Promise<void> {
+  async create(song: Song): Promise<Song> {
+
     const payload = song.payload;
-    const { error } = await this.query
-      .from('song').insert(payload);
+
+    const { data, error } = await this.query
+      .from('song')
+      .insert(payload)
+      .select()
+      .single();
 
     if (error) throw error;
+
+    return new Song(data);
+
   }
 
   async update(id: number, song: Song): Promise<void> {

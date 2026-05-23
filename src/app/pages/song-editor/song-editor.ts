@@ -39,7 +39,9 @@ export class SongEditor implements OnInit {
     if (this.songId) {
       await this.service.update(this.songId, this.song);
     } else {
-      await this.service.create(this.song);
+      const createdSong = await this.service.create(this.song);
+      this.songId = createdSong.id;
+      this.song = createdSong;
     }
 
     // this.router.navigate(['/song']);
