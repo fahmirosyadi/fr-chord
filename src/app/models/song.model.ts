@@ -277,7 +277,8 @@ export class Song extends BaseModel {
 
       const matches = [
         ...line.matchAll(/\[([^\]]+)\]/g),
-        ...line.matchAll(/\{([^}]+)\}/g)
+        ...line.matchAll(/\{([^}]+)\}/g),
+        ...line.matchAll(/\<([^>]+)\>/g)
       ].sort((a, b) => a.index! - b.index!);
 
       const row: SongLine[] = [];
@@ -296,10 +297,11 @@ export class Song extends BaseModel {
           const raw = matches[i][0];
           const content = matches[i][1];
           const isBar = raw.startsWith('{');
+          const isFastBar = raw.startsWith('<');
 
           let chordConverted = '';
 
-          if (isBar) {
+          if (isBar || isFastBar) {
             const tokens = content.trim().split(/\s+/);
 
             const formatted = tokens.map(token => {
@@ -312,7 +314,11 @@ export class Song extends BaseModel {
               );
             }).join(' ');
 
-            chordConverted = `[${formatted}]`;
+            if(isFastBar) {
+              chordConverted = `<${formatted}>`;
+            } else {
+              chordConverted = `[${formatted}]`;
+            }
 
           } else {
             if (content.includes('/')) {
