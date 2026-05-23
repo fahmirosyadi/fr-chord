@@ -8,6 +8,7 @@
     Vocalist Mode
   </button>
   <div class="song-title">{{ song.title }}</div>
+  <div class="song-original-key">Original Key: {{ song.originalKey }}</div>
   @if (song.redirectUrl) {
     <a
       href="{{ song.redirectUrl }}"
