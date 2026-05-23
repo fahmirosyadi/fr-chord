@@ -16,6 +16,26 @@ export class SongPreviewComponent {
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
+  vocalistMode = false;
+
+  ngOnInit() {
+
+    const saved = localStorage.getItem('vocalistMode');
+
+    this.vocalistMode = saved === 'true';
+
+  }
+
+  toggleVocalistMode() {
+
+    this.vocalistMode = !this.vocalistMode;
+
+    localStorage.setItem(
+      'vocalistMode',
+      String(this.vocalistMode)
+    );
+
+  }
 
   nextPart() {
     if (this.currentIndex < this.song.parts.length - 1) {

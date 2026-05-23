@@ -7,9 +7,11 @@
     <div class="line">
       @for (seg of row; track $index) {
         <div class="segment" [class.no-chord]="!seg.chords">
-          <div class="chord-line" style="">
-            {{ seg.chords || '' }}
-          </div>
+          @if (!vocalistMode) {
+            <div class="chord-line">
+              {{ seg.chords || '' }}
+            </div>
+          }
           <div class="lyric-line">{{ seg.lyric }}</div>
         </div>
       }

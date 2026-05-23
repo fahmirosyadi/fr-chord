@@ -1,5 +1,12 @@
 <div class="preview">
 
+  <button mat-button (click)="toggleVocalistMode()">
+    <mat-icon>
+      {{ vocalistMode ? 'visibility_off' : 'visibility' }}
+    </mat-icon>
+
+    Vocalist Mode
+  </button>
   <div class="song-title">{{ song.title }}</div>
   @if (song.redirectUrl) {
     <a
@@ -21,7 +28,7 @@
         </div>
 
         <div class="part-body">
-          <app-part-preview [part]="part" [showTitle]="false"></app-part-preview>
+          <app-part-preview [part]="part" [showTitle]="false" [vocalistMode]="vocalistMode"></app-part-preview>
         </div>
 
       </div>
