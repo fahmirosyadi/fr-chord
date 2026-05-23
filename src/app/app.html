@@ -4,8 +4,19 @@
 
   <!-- MOBILE DRAWER -->
   <mat-sidenav
-    #sidenav
-    mode="over">
+  #sidenav
+  mode="over">
+    <a
+      routerLink="/"
+      class="logo-link"
+      (click)="sidenav.close()">
+
+      <img
+        src="/favicon.ico"
+        alt="FR Chord Logo"
+        class="app-logo">
+
+    </a>
 
     <mat-nav-list>
 
