@@ -42,9 +42,9 @@ export class SongEditor implements OnInit {
       const createdSong = await this.service.create(this.song);
       this.songId = createdSong.id;
       this.song = createdSong;
+      this.router.navigate(['/song-editor', createdSong.id]);
     }
 
-    // this.router.navigate(['/song']);
     this.snackBar.open('Song saved!', 'Close', {
       duration: 3000,
       verticalPosition: 'top',

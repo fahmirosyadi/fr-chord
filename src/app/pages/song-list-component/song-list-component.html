@@ -27,24 +27,32 @@
 
 		} @else {
 
-			@for (song of data; track song.id) {
+			@for (song of data; track song.id; let i = $index) {
 
-				<div
-					class="song-item"
-					(click)="viewSong(song)"
-					matRipple>
+        <div
+          class="song-item"
+          (click)="viewSong(song)"
+          matRipple>
 
-					<div class="title">
-						{{ song.title }} {{ song.key ? '(' + song.key + ')' : '' }}
-					</div>
+          <div class="song-number">
+            {{ i + 1 }}
+          </div>
 
-					<div class="artist">
-						{{ song.artist }}
-					</div>
+          <div class="song-content">
 
-				</div>
+            <div class="title">
+              {{ song.title }} {{ song.key ? '(' + song.key + ')' : '' }}
+            </div>
 
-			}
+            <div class="artist">
+              {{ song.artist }}
+            </div>
+
+          </div>
+
+        </div>
+
+      }
 
 		}
 

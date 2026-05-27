@@ -7,6 +7,7 @@ import { SongService } from '../../services/song-service';
 import { PartPreviewComponent } from '../../components/part-preview-component/part-preview-component';
 import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Factory } from 'vexflow';
 
 @Component({
   selector: 'app-song-view',
@@ -32,6 +33,27 @@ export class SongView implements OnInit {
   ) {}
 
   async ngOnInit() {
+
+    // const vf = new Factory({
+    //   renderer: {
+    //     elementId: 'score',
+    //     width: 500,
+    //     height: 200
+    //   }
+    // });
+
+    // const score = vf.EasyScore();
+    // const system = vf.System();
+
+    // system.addStave({
+    //   voices: [
+    //     score.voice(
+    //       score.notes('C5/q, D5/8, D5/8, E5/q, F5/q')
+    //     )
+    //   ]
+    // }).addClef('treble');
+
+    // vf.draw();
 
     const id = this.route.snapshot.paramMap.get('id');
 
