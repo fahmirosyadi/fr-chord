@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Supabase } from './supabase';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -37,9 +38,9 @@ export class AuthService {
 		return await this.supabase.auth.signOut();
   }
 
-  async getUser() {
+  async getUser(): Promise<User> {
 		const { data } = await this.supabase.auth.getUser();
-		return data.user;
+		return data.user ? new User(data.user) : new User();
   }
 
   async getSession() {

@@ -7,6 +7,8 @@ import { SongService } from '../../services/song-service';
 import { Song } from '../../models/song.model';
 import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth-service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-song-editor',
@@ -21,12 +23,16 @@ export class SongEditor implements OnInit {
 
   song = new Song();
 
-  constructor(private route: ActivatedRoute, private router: Router, public service: SongService, private snackBar: MatSnackBar) {}
+  constructor(
+    private route: ActivatedRoute
+    , private router: Router
+    , public service: SongService
+    , private snackBar: MatSnackBar
+    , private authService: AuthService
+  ) {}
 
   async ngOnInit() {
-
     const songId = this.route.snapshot.paramMap.get('id');
-
     if (songId) {
       this.songId = parseInt(songId);
       this.song = await this.service.getById(this.songId);
@@ -35,13 +41,13 @@ export class SongEditor implements OnInit {
   }
 
   async saveSong() {
-
     if (this.songId) {
       await this.service.update(this.songId, this.song);
     } else {
       const createdSong = await this.service.create(this.song);
       this.songId = createdSong.id;
       this.song = createdSong;
+
       this.router.navigate(['/song-editor', createdSong.id]);
     }
 

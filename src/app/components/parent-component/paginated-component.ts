@@ -7,7 +7,7 @@ export abstract class PaginatedComponent<T> {
 
   pageIndex = 0;
 	page = 0;
-	pageSize = 50;
+	pageSize = 100;
 
 	total = 0;
 
