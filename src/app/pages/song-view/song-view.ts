@@ -99,7 +99,7 @@ export class SongView implements OnInit {
   }
 
   nextPart() {
-    if (this.currentIndex < this.song.parts.length - 1) {
+    if (this.currentIndex < this.song.getParts().length - 1) {
       this.scrollToPart(this.currentIndex + 1);
     }
   }

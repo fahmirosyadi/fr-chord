@@ -19,7 +19,7 @@
       The chord is not available here yet. Please go to this page to view it.
     </a>
   }
-  @for (part of song.parts; track $index) {
+  @for (part of song.getParts(); track $index) {
     <div class="part-item" [attr.id]="'part-' + $index" (click)="scrollToPart($index)">
 
       <div class="part-card">

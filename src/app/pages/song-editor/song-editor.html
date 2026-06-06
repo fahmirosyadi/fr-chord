@@ -22,7 +22,17 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Artist</mat-label>
-        <input matInput [(ngModel)]="song.artist">
+        <input matInput
+        [formControl]="artistControl"
+        [matAutocomplete]="auto"
+        [(ngModel)]="song.artist">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let artist of artists"
+            [value]="artist.artist">
+            {{artist.artist}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Key</mat-label>

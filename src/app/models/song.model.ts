@@ -55,6 +55,13 @@ export class Song extends BaseModel {
     );
   }
 
+  transposeRenderedBar(bar: string, step: number): string {
+    return bar.replace(
+      /[A-G](?:#|b)?(?:m|dim|aug|sus[24]?|add\d+|M?\d*)?(?:\/[A-G](?:#|b)?)?/g,
+      chord => this.transposeChord(chord, step)
+    );
+  }
+
   convertNumberToNote(input: string): string {
 
     const match = input.match(/^([1-7])([#b]?)$/);
@@ -208,7 +215,7 @@ export class Song extends BaseModel {
     this.transpose(step);
   }
 
-  get parts(): SongPart[] {
+  getParts(showNumeral = false): SongPart[] {
     const lines = this.chord.split('\n');
 
     const parts: SongPart[] = [];
@@ -250,7 +257,11 @@ export class Song extends BaseModel {
           name: targetName,
           lines: targetPart.lines.map(row =>
             row.map(seg => ({
-              chords: this.transposeChord(seg.chords, extraStep),
+              chords:
+                seg.chords.startsWith('[') ||
+                seg.chords.startsWith('<')
+                  ? this.transposeRenderedBar(seg.chords, extraStep)
+                  : this.transposeChord(seg.chords, extraStep),
               lyric: seg.lyric
             }))
           )
@@ -336,10 +347,14 @@ export class Song extends BaseModel {
 
               chordConverted = `${mainChord}/${bassNote}`;
             } else {
-              chordConverted = this.transposeChord(
-                this.convertNumberChord(content),
-                step
-              );
+              if (showNumeral) {
+                chordConverted = content;
+              } else {
+                chordConverted = this.transposeChord(
+                  this.convertNumberChord(content),
+                  step
+                );
+              }
             }
           }
 

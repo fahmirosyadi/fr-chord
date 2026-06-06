@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared.module';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Supabase } from '../../services/supabase';
@@ -9,17 +9,22 @@ import { SongPreviewComponent } from "../../components/song-preview-component/so
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth-service';
 import { User } from '../../models/user.model';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Artist } from '../../models/artist.model';
 
 @Component({
   selector: 'app-song-editor',
   standalone: true,
-  imports: [SharedModule, FormsModule, SongPreviewComponent],
+  imports: [SharedModule, FormsModule, SongPreviewComponent, MatAutocompleteModule],
   templateUrl: './song-editor.html',
   styleUrl: './song-editor.scss'
 })
 export class SongEditor implements OnInit {
 
   songId: number | null = null;
+  artistControl = new FormControl('');
+  artists: Artist[] = [];
 
   song = new Song();
 
@@ -38,6 +43,19 @@ export class SongEditor implements OnInit {
       this.song = await this.service.getById(this.songId);
     }
 
+    this.artistControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(keyword => {
+        if (!keyword) {
+          return of([]);
+        }
+
+        return this.service.getAllArtists(keyword);
+      })
+    ).subscribe(artists => {
+      this.artists = artists;
+    });
   }
 
   async saveSong() {
@@ -58,5 +76,6 @@ export class SongEditor implements OnInit {
     });
 
   }
+
 
 }

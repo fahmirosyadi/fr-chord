@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Supabase } from './supabase';
 import { Song } from '../models/song.model';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { Artist } from '../models/artist.model';
 
 @Injectable({
   providedIn: 'root',
@@ -99,6 +100,17 @@ export class SongService {
       .from('song').delete().eq('id', id);
 
     if (error) throw error;
+  }
+
+  async getAllArtists(keyword: string): Promise<Artist[]> {
+
+    const { data, error } = await this.query.from('artist_list')
+    .select('*').ilike('artist', `%${keyword}%`)
+    .limit(10).order('artist');
+
+    if (error) throw error;
+
+    return data ?? [];
   }
 
   extractSongs(): Song[] {
