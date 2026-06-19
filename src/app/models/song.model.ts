@@ -223,7 +223,7 @@ export class Song extends BaseModel {
 
     let currentPart: SongPart | null = null;
 
-    const partRegex = /^\[?\s*(intro|interlude|verse|pre-chorus|post-chorus|chorus|bridge|coda|outro)(\s*\d*)?(?:\s*\|\s*([+-]?\d+))?\s*\]?$/i;
+    const partRegex = /^\[?\s*(intro|interlude|verse|pre-chorus|post-chorus|chorus|bridge|breakdown|coda|outro)(\s*\d*)?(?:\s*\|\s*([+-]?\d+))?\s*\]?$/i;
     const jumpRegex = /^\[?\s*to\s+(.+?)(?:\s*\|\s*([+-]?\d+))?\s*\]?$/i;
     const modRegex = /^\[\s*([+-]\d+)\s*\]$/;
 
