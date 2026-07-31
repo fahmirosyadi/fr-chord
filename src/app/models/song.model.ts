@@ -159,25 +159,22 @@ export class Song extends BaseModel {
   }
 
   transposeChord(chord: string, step: number): string {
-    const chordPattern = /^[A-G](#|b)?/i;
-    const rootMatch = chord.match(chordPattern);
-    if (!rootMatch) return chord;
-
-    let root = rootMatch[0];
-
     const flatMap: Record<string, string> = {
-      Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#'
+      Db: "C#",
+      Eb: "D#",
+      Gb: "F#",
+      Ab: "G#",
+      Bb: "A#",
     };
 
-    if (flatMap[root]) root = flatMap[root];
+    return chord.replace(/[A-G](?:#|b)?/g, (note) => {
+      const normalized = flatMap[note] || note;
+      const index = Song.CHORDS.indexOf(normalized);
 
-    const index = Song.CHORDS.indexOf(root);
-    if (index === -1) return chord;
+      if (index === -1) return note;
 
-    const newIndex = (index + step + 12) % 12;
-    const newRoot = Song.CHORDS[newIndex];
-
-    return newRoot + chord.slice(rootMatch[0].length);
+      return Song.CHORDS[(index + step + 12) % 12];
+    });
   }
 
   transpose(step: number) {
