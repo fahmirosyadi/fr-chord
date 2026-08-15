@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { SharedModule } from '../../shared.module';
@@ -16,14 +16,14 @@ import { Factory } from 'vexflow';
   templateUrl: './song-view.html',
   styleUrl: './song-view.scss'
 })
-export class SongView implements OnInit {
+export class SongView implements OnInit, OnChanges  {
 
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
   youtubeEmbedUrl: SafeResourceUrl | null = null;
 
-  song = new Song();
+  @Input() song!: Song;
 
 
   constructor(
@@ -31,6 +31,14 @@ export class SongView implements OnInit {
     private service: SongService,
     private sanitizer: DomSanitizer
   ) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['song'] && this.song) {
+      this.song = new Song(this.song);
+      this.currentIndex = 0;
+      this.setYoutubeUrl();
+    }
+  }
 
   async ngOnInit() {
 
@@ -55,21 +63,27 @@ export class SongView implements OnInit {
 
     // vf.draw();
 
-    const id = this.route.snapshot.paramMap.get('id');
+    console.log(this.song);
+    if(!this.song) {
+      const id = this.route.snapshot.paramMap.get('id');
 
-    if (id) {
+      if (id) {
 
-      const song = await this.service.getById(parseInt(id));
+        const song = await this.service.getById(parseInt(id));
 
-      if (song) {
-        this.song = new Song(song);
-        this.setYoutubeUrl();
-        if(this.song.preferredKey) {
-          // this.song.tmpCurrentKey = this.song.preferredKey;
+        if (song) {
+          this.song = new Song(song);
+          this.setYoutubeUrl();
+          if(this.song.preferredKey) {
+            // this.song.tmpCurrentKey = this.song.preferredKey;
+          }
         }
-      }
 
+      }
+    }else{
+      this.song = new Song(this.song);
     }
+
 
   }
 

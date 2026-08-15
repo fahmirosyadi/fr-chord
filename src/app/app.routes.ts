@@ -10,9 +10,12 @@ import { LoginComponent } from './login-component/login-component';
 import { RegisterComponent } from './pages/register-component/register-component';
 import { SongListComponent } from './pages/song-list-component/song-list-component';
 import { ResetPasswordComponent } from './pages/reset-password-component/reset-password-component';
+import { PlaylistComponent } from './pages/playlist-component/playlist-component';
+import { PlaylistViewComponent } from './pages/playlist-view-component/playlist-view-component';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
+  { path: 'setlists', component: PlaylistComponent },
   {
     path: 'login',
     component: LoginComponent
@@ -27,6 +30,7 @@ export const routes: Routes = [
     component: ResetPasswordComponent
   },
   { path: 'song-view/:id', component: SongView },
+  { path: 'setlist-view/:id', component: PlaylistViewComponent },
   {
     path: '',
     canActivate: [authGuard],

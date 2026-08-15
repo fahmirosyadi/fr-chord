@@ -1,0 +1,57 @@
+<div class="">
+
+	<!-- SEARCH -->
+
+	<div class="search-bar">
+
+		<mat-icon>search</mat-icon>
+
+		<input
+			type="text"
+			placeholder="Search setlists..."
+			[(ngModel)]="search"
+			(input)="onSearch(search)"
+		/>
+
+	</div>
+
+	<!-- PLAYLIST LIST -->
+
+	<div class="playlist-list">
+
+		@if (loading) {
+
+			<div class="loading">
+				Loading...
+			</div>
+
+		} @else {
+
+			@for (playlist of data; track playlist.id; let i = $index) {
+
+        <div
+          class="song-item"
+          (click)="view(playlist)"
+          matRipple>
+
+          <div class="song-number">
+            {{ i + 1 }}
+          </div>
+
+          <div class="song-content">
+
+            <div class="title">
+              {{ playlist.name }}
+            </div>
+
+          </div>
+
+        </div>
+
+      }
+
+		}
+
+	</div>
+
+</div>

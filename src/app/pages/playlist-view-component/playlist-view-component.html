@@ -1,0 +1,39 @@
+<div
+  class="">
+  <div class="">
+    <div class="" style="margin-bottom: 20px;">
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          mat-stroked-button
+          (click)="previousSong()">
+
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          mat-stroked-button
+          (click)="nextSong()">
+
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    <app-song-view [song]="(playlist.playlistSong || [])[currentIndex].song"></app-song-view>
+    <div class="" style="margin-top: 20px;">
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          mat-stroked-button
+          (click)="previousSong()">
+
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          mat-stroked-button
+          (click)="nextSong()">
+
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
