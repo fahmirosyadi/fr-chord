@@ -1,0 +1,131 @@
+.page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* 🔍 Search Bar */
+.search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 15px;
+}
+
+/* 📄 List */
+.song-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+
+.song-number {
+	min-width: 26px;
+	height: 36px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	border-radius: 8px;
+	background: rgba(0,0,0,0.08);
+
+	font-weight: 500;
+
+  // color: #c95d1a;
+
+	border-right: 3px solid;
+}
+
+.song-item:hover {
+  background: #f5f5f5;
+}
+
+/* Text */
+.title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.artist {
+  font-size: 13px;
+  color: #757575;
+}
+
+.title-bar {
+  padding: 8px 4px 8px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+  }
+}
+
+
+
+.example-list {
+  width: 500px;
+  max-width: 100%;
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.example-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+  font-family: sans-serif;
+}
+.cdk-drag-preview {
+  border: none;
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow:
+    0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.example-box:last-child {
+  border: none;
+}
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

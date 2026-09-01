@@ -17,8 +17,39 @@
 	<table
 		mat-table
 		[dataSource]="data"
-		class="mat-elevation-z1">
+		class="mat-elevation-z1"
+		cdkDropList
+		[cdkDropListDisabled]="!draggable"
+		(cdkDropListDropped)="onDrop($event)">
 
+		<!-- Drag handle column -->
+		@if (draggable) {
+
+			<ng-container matColumnDef="drag">
+
+				<th mat-header-cell *matHeaderCellDef></th>
+
+				<td
+					mat-cell
+					*matCellDef="let row">
+
+					<button
+						mat-icon-button
+						cdkDragHandle
+						(click)="$event.stopPropagation()"
+						aria-label="Reorder">
+
+						<mat-icon>drag_indicator</mat-icon>
+
+					</button>
+
+				</td>
+
+			</ng-container>
+
+		}
+
+		<!-- Normal columns -->
 		@for (col of columns; track col.key) {
 
 			<ng-container [matColumnDef]="col.key">
@@ -35,6 +66,7 @@
 
 		}
 
+		<!-- Actions -->
 		@if (showActions) {
 
 			<ng-container matColumnDef="actions">
@@ -67,16 +99,21 @@
 
 		}
 
+		<!-- Header -->
 		<tr
 			mat-header-row
 			*matHeaderRowDef="displayedColumns">
 		</tr>
 
+		<!-- Rows -->
 		<tr
 			mat-row
 			*matRowDef="let row; columns: displayedColumns"
+			cdkDrag
+			[cdkDragDisabled]="!draggable"
 			(click)="onView(row)"
 			class="clickable-row">
+
 		</tr>
 
 	</table>

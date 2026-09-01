@@ -60,6 +60,8 @@ export class PlaylistService {
       .select(`
         *,
         playlist_song(
+          id,
+          order,
           song(*)
         )
       `)
@@ -107,6 +109,23 @@ export class PlaylistService {
       .from('song').delete().eq('id', id);
 
     if (error) throw error;
+  }
+
+  async updateSongOrder(
+    playlistId: number,
+    songIds: number[]
+  ) {
+    const { error } = await this.query.rpc(
+      'update_playlist_song_order',
+      {
+        p_playlist_id: playlistId,
+        p_song_ids: songIds
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
   }
 
 }

@@ -30,7 +30,7 @@ export class PlaylistComponent extends PaginatedComponent<Playlist> implements O
 	view(playlist: Playlist) {
 
 		this.router.navigate([
-			'/setlist-view',
+			'/setlist-song',
 			playlist.id
 		]);
 

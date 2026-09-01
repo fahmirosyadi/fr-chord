@@ -12,6 +12,7 @@ import { SongListComponent } from './pages/song-list-component/song-list-compone
 import { ResetPasswordComponent } from './pages/reset-password-component/reset-password-component';
 import { PlaylistComponent } from './pages/playlist-component/playlist-component';
 import { PlaylistViewComponent } from './pages/playlist-view-component/playlist-view-component';
+import { PlaylistSongComponent } from './pages/playlist-song-component/playlist-song-component';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
@@ -30,6 +31,7 @@ export const routes: Routes = [
     component: ResetPasswordComponent
   },
   { path: 'song-view/:id', component: SongView },
+  { path: 'setlist-song/:id', component: PlaylistSongComponent },
   { path: 'setlist-view/:id', component: PlaylistViewComponent },
   {
     path: '',

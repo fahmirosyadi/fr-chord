@@ -7,12 +7,17 @@ import {
 	SimpleChanges,
 } from '@angular/core';
 
+import {
+	CdkDragDrop,
+	moveItemInArray,
+} from '@angular/cdk/drag-drop';
+
 import { SharedModule } from '../../shared.module';
 
 export interface TableColumn {
 	key: string;
 	label: string;
-  hidden?: boolean;
+	hidden?: boolean;
 }
 
 @Component({
@@ -28,19 +33,27 @@ export class DataTableComponent implements OnChanges {
 
 	@Input() loading = false;
 
+	@Input() showActions = false;
+
+	// Enable/disable drag & drop
+	@Input() draggable = false;
+
 	@Output() search = new EventEmitter<string>();
 
-	@Input() showActions = false;
 	@Output() edit = new EventEmitter<any>();
 	@Output() view = new EventEmitter<any>();
 	@Output() delete = new EventEmitter<any>();
+
+	// Emits the new order after dragging
+	@Output() reorder = new EventEmitter<any[]>();
+
 	displayedColumns: string[] = [];
 
 	ngOnChanges(changes: SimpleChanges) {
 
 		this.displayedColumns = this.columns
-      .filter(c => !c.hidden)
-      .map(c => c.key);
+			.filter(c => !c.hidden)
+			.map(c => c.key);
 
 		if (this.showActions) {
 			this.displayedColumns.push('actions');
@@ -56,9 +69,9 @@ export class DataTableComponent implements OnChanges {
 		this.edit.emit(row);
 	}
 
-  onDelete(row: any) {
-    this.delete.emit(row);
-  }
+	onDelete(row: any) {
+		this.delete.emit(row);
+	}
 
 	onSearch(event: Event) {
 
@@ -73,6 +86,26 @@ export class DataTableComponent implements OnChanges {
 		return path
 			.split('.')
 			.reduce((o, key) => o?.[key], obj);
+
+	}
+
+	onDrop(event: CdkDragDrop<any[]>) {
+
+		if (!this.draggable) {
+			return;
+		}
+
+		moveItemInArray(
+			this.data,
+			event.previousIndex,
+			event.currentIndex
+		);
+
+		// Create a new array reference
+		// so Angular can detect the changed order.
+		this.data = [...this.data];
+
+		this.reorder.emit(this.data);
 
 	}
 

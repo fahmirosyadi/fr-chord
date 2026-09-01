@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { SongView } from '../song-view/song-view';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlaylistService } from '../../services/playlist-service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Playlist } from '../../models/playlist.model';
@@ -40,21 +40,40 @@ export class PlaylistViewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private service: PlaylistService,
     private sanitizer: DomSanitizer
   ) {}
 
+  backToSetlist() {
+    this.router.navigate(['/setlist-song/', this.playlist.id]);
+  }
+
   async ngOnInit(): Promise<void> {
-    const id = this.route.snapshot.paramMap.get('id');
+    const playlistId = this.route.snapshot.paramMap.get('id');
+    const songId = this.route.snapshot.queryParamMap.get('songId');
 
-    if (id) {
+    if (playlistId) {
 
-      const playlist = await this.service.getById(parseInt(id));
+      const playlist = await this.service.getById(parseInt(playlistId));
 
       if (playlist) {
-        this.playlist = new Playlist(playlist);
-      }
 
+        this.playlist = new Playlist(playlist);
+
+        if (songId) {
+
+          const index = this.playlist.playlistSong?.findIndex(
+            ps => ps.song?.id === parseInt(songId)
+          ) ?? -1;
+
+          if (index >= 0) {
+            this.currentIndex = index;
+          }
+
+        }
+
+      }
     }
   }
 

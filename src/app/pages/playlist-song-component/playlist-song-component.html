@@ -1,0 +1,75 @@
+<div class="">
+
+
+  <!-- SEARCH -->
+
+	<div class="title-bar">
+
+    <div class="title">
+      @if (isLoggedIn) {
+        <button
+          mat-icon-button
+          (click)="toggleEditMode()"
+          [attr.aria-label]="isEditMode ? 'Done editing' : 'Edit setlist'">
+
+          <mat-icon>
+            {{ isEditMode ? 'check' : 'edit' }}
+          </mat-icon>
+
+        </button>
+      }
+      {{ playlist.name }}
+    </div>
+
+	</div>
+
+	<!-- SONG LIST -->
+
+	<div class="song-list" cdkDropList
+    (cdkDropListDropped)="onDrop($event)">
+
+		@for (song of playlist.playlistSong; track song.song.id; let i = $index) {
+
+      <div
+        class="song-item"
+        (click)="view(song.song.id)"
+        cdkDrag
+        [cdkDragDisabled]="!isLoggedIn || !isEditMode"
+        matRipple>
+
+        <!-- DRAG HANDLE -->
+
+        @if (isEditMode) {
+          <div
+            class="drag-handle"
+            cdkDragHandle
+            (click)="$event.stopPropagation()">
+
+            <mat-icon>drag_indicator</mat-icon>
+
+          </div>
+        }
+
+        <div class="song-number">
+          {{ i + 1 }}
+        </div>
+
+        <div class="song-content">
+
+          <div class="title">
+            {{ song.song.title }} {{ song.song.key ? '(' + song.song.key + ')' : '' }}
+          </div>
+
+          <div class="artist">
+            {{ song.song.artist }}
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+	</div>
+
+</div>
