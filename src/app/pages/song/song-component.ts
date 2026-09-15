@@ -8,6 +8,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../services/auth-service';
 import { PageEvent } from '@angular/material/paginator';
 import { PaginatedComponent } from '../../components/parent-component/paginated-component';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-song',
@@ -16,8 +17,9 @@ import { PaginatedComponent } from '../../components/parent-component/paginated-
   templateUrl: './song-component.html',
   styleUrl: './song-component.scss'
 })
-export class SongComponent  extends PaginatedComponent<Song>  implements OnInit {
 
+
+export class SongComponent extends PaginatedComponent<Song> implements OnInit {
 
   allColumns: TableColumn[] = [
     { key: 'id', label: 'ID', hidden: true },
@@ -40,43 +42,78 @@ export class SongComponent  extends PaginatedComponent<Song>  implements OnInit 
 
   columns: TableColumn[] = [];
 
-  constructor(private service: SongService, private authService: AuthService, private router: Router, private breakpointObserver: BreakpointObserver) {
-    super();
-  }
+	private searchSubject = new Subject<string>();
+	private destroy$ = new Subject<void>();
 
-  async ngOnInit() {
-    await this.loadData();
+	// ... your existing columns ...
 
-    this.breakpointObserver.observe([Breakpoints.Handset])
-    .subscribe(result => {
-      this.columns = result.matches
-      ? this.mobileColumns
-      : this.allColumns;
-    });
-  }
+	constructor(
+		private service: SongService,
+		private authService: AuthService,
+		private router: Router,
+		private breakpointObserver: BreakpointObserver
+	) {
+		super();
+	}
 
-  protected override fetchData(): Promise<{ data: Song[]; total: number; }> {
-    return this.service.getPaged(this.pageIndex, this.pageSize, this.search);
-  }
+	async ngOnInit() {
+		this.searchSubject
+			.pipe(
+				debounceTime(500),
+				distinctUntilChanged(),
+				takeUntil(this.destroy$)
+			)
+			.subscribe(() => {
+				this.pageIndex = 0;
+				this.loadData();
+			});
 
-  editSong(song: Song) {
-    console.log('song:', song);
-    this.router.navigate(['/song-editor', song.id]);
-  }
+		await this.loadData();
 
-  async deleteSong(song: Song) {
-    if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
-      await this.service.delete(song.id);
-      await this.loadData();
-    }
-  }
+		this.breakpointObserver.observe([Breakpoints.Handset])
+			.subscribe(result => {
+				this.columns = result.matches
+					? this.mobileColumns
+					: this.allColumns;
+			});
+	}
 
-  viewSong(song: Song) {
-    this.router.navigate(['/song-view', song.id]);
-  }
+	onSearch2(value: string) {
+    this.search = value;
+		this.searchSubject.next(value);
+	}
 
-  addSong() {
-    this.router.navigate(['/song-editor']);
-  }
+	protected override fetchData(): Promise<{ data: Song[]; total: number }> {
+		return this.service.getPaged(
+			this.pageIndex,
+			this.pageSize,
+			this.search
+		);
+	}
 
+	editSong(song: Song) {
+		console.log('song:', song);
+		this.router.navigate(['/song-editor', song.id]);
+	}
+
+	async deleteSong(song: Song) {
+		if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
+			await this.service.delete(song.id);
+			await this.loadData();
+		}
+	}
+
+	viewSong(song: Song) {
+		this.router.navigate(['/song-view', song.id]);
+	}
+
+	addSong() {
+		this.router.navigate(['/song-editor']);
+	}
+
+	ngOnDestroy() {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
 }
+
