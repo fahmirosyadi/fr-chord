@@ -16,7 +16,7 @@
           [attr.aria-label]="isEditMode ? 'Done editing' : 'Edit setlist'">
 
           <mat-icon>
-            {{ isEditMode ? 'check' : 'edit' }}
+            {{ isEditMode ? 'check' : 'swap_vert' }}
           </mat-icon>
 
         </button>
@@ -27,6 +27,16 @@
 
           <mat-icon>
             add
+          </mat-icon>
+
+        </button>
+        <button
+          mat-icon-button
+          (click)="toggleDeleteMode()"
+          [attr.aria-label]="isDeleteMode ? 'Done deleting' : 'Delete song from setlist'">
+
+          <mat-icon>
+            {{ isDeleteMode ? 'check' : 'delete' }}
           </mat-icon>
 
         </button>
@@ -60,6 +70,20 @@
             <mat-icon>drag_indicator</mat-icon>
 
           </div>
+        }
+        @if (isDeleteMode) {
+          <button
+            mat-icon-button
+            class="delete-button"
+            (click)="deleteSong($event, song.song.id)"
+            aria-label="Delete song">
+
+            <mat-icon>
+              delete
+            </mat-icon>
+
+          </button>
+
         }
 
         <div class="song-number">

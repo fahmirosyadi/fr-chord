@@ -28,10 +28,15 @@ export class PlaylistSongComponent implements OnInit  {
 
   playlist = new Playlist();
   isEditMode = false;
+  isDeleteMode = false;
   isLoggedIn = false;
 
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
+  }
+
+  toggleDeleteMode() {
+    this.isDeleteMode = !this.isDeleteMode;
   }
 
   constructor(
@@ -100,6 +105,16 @@ export class PlaylistSongComponent implements OnInit  {
         playlistId: this.playlist.id
       }
     });
+  }
+
+  async deleteSong(event: Event, songId: number) {
+    event.stopPropagation();
+    await this.service.removeSong(this.playlist.id, songId);
+    // Refresh the playlist songs
+    const updatedPlaylist = await this.service.getById(this.playlist.id);
+    if (updatedPlaylist) {
+      this.playlist = new Playlist(updatedPlaylist);
+    }
   }
 
 }
