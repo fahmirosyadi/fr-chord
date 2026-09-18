@@ -94,4 +94,12 @@ export class PlaylistSongComponent implements OnInit  {
 
 	}
 
+  addSong() {
+    this.router.navigate(['/'], {
+      queryParams: {
+        playlistId: this.playlist.id
+      }
+    });
+  }
+
 }

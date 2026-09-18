@@ -15,6 +15,7 @@
 
 	</div>
 
+
 	<!-- SONG LIST -->
 
 	<div class="song-list">
@@ -29,30 +30,53 @@
 
 			@for (song of data; track song.id; let i = $index) {
 
-        <div
-          class="song-item"
-          (click)="viewSong(song)"
-          matRipple>
+				<div
+					class="song-item"
+					matRipple
+					(click)="viewSong(song)">
 
-          <div class="song-number">
-            {{ i + 1 }}
-          </div>
+					@if (isAddMode) {
 
-          <div class="song-content">
+						<mat-checkbox
+							[checked]="isSongAdded(song.id!)"
+							(click)="$event.stopPropagation()"
+							(change)="toggleSong(song)">
+						</mat-checkbox>
 
-            <div class="title">
-              {{ song.title }} {{ song.key ? '(' + song.key + ')' : '' }}
-            </div>
+					} @else {
 
-            <div class="artist">
-              {{ song.artist }}
-            </div>
+						<div class="song-number">
+							{{ i + 1 }}
+						</div>
 
-          </div>
+					}
 
-        </div>
 
-      }
+					<div class="song-content">
+
+						<div class="title">
+							{{ song.title }}
+							{{ song.key ? '(' + song.key + ')' : '' }}
+						</div>
+
+						<div class="artist">
+							{{ song.artist }}
+						</div>
+
+					</div>
+
+
+					@if (!isAddMode) {
+
+						<mat-icon class="arrow">
+							chevron_right
+						</mat-icon>
+
+					}
+
+				</div>
+
+			}
 
 		}
 

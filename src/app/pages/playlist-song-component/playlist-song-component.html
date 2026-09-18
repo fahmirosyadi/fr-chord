@@ -6,6 +6,9 @@
 	<div class="title-bar">
 
     <div class="title">
+      {{ playlist.name }}
+    </div>
+    <div class="actions" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
       @if (isLoggedIn) {
         <button
           mat-icon-button
@@ -17,8 +20,17 @@
           </mat-icon>
 
         </button>
+        <button
+          mat-icon-button
+          (click)="addSong()"
+          [attr.aria-label]="'Add song to setlist'">
+
+          <mat-icon>
+            add
+          </mat-icon>
+
+        </button>
       }
-      {{ playlist.name }}
     </div>
 
 	</div>

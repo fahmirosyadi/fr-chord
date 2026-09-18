@@ -1,14 +1,13 @@
 import { BaseModel } from "./base-model.model";
-import { PlaylistSong } from "./playlist-song.model";
 import { Song } from "./song.model";
 
 
-export class Playlist extends BaseModel {
+export class PlaylistSong extends BaseModel {
   id!: number;
-  name?: string;
-  playlistSong?: PlaylistSong[];
+  order?: number;
+  song!: Song;
 
-  constructor(data?: Partial<Playlist>) {
+  constructor(data?: Partial<PlaylistSong>) {
     super(data);
     if (data) {
       Object.assign(this, this.toCamelCase(data));

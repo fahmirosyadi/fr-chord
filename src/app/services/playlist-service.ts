@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Supabase } from './supabase';
 import { Playlist } from '../models/playlist.model';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { PlaylistSong } from '../models/playlist-song.model';
 
 @Injectable({
   providedIn: 'root',
@@ -126,6 +127,57 @@ export class PlaylistService {
     if (error) {
       throw error;
     }
+  }
+
+  async addSong(
+    playlistId: number,
+    songId: number
+  ): Promise<PlaylistSong> {
+
+    const { data: lastSong, error: lastSongError } = await this.query
+      .from('playlist_song')
+      .select('order')
+      .eq('playlist_id', playlistId)
+      .order('order', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (lastSongError) {
+      throw lastSongError;
+    }
+
+    const nextOrder = lastSong
+      ? lastSong.order + 1
+      : 1;
+
+    const payload = {
+      playlist_id: playlistId,
+      song_id: songId,
+      order: nextOrder
+    };
+
+    const { data, error } = await this.query
+      .from('playlist_song')
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return new PlaylistSong(data);
+  }
+
+  async removeSong(playlistId: number, songId: number): Promise<void> {
+
+    const { error } = await this.query
+      .from('playlist_song')
+      .delete()
+      .eq('playlist_id', playlistId)
+      .eq('song_id', songId);
+
+    if (error) throw error;
   }
 
 }
