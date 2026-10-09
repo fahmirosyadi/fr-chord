@@ -1,5 +1,5 @@
 <div
-  class=""
+  class="song-view-page"
   (swipeleft)="nextPart()"
   (swiperight)="prevPart()">
   <div class="">
@@ -15,30 +15,31 @@
         </iframe>
       </div>
     }
+    <div class="chart-area" [class.has-metronome]="showMetronome && hasMetronomeSettings">
     <div class="grid grid-cols-4 gap-2" style="width: 300px; margin-top: 20px; margin-bottom: 20px;">
       <button mat-raised-button (click)="song.transpose(-1)">-</button>
       <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
       <button mat-raised-button (click)="song.transpose(1)">+</button>
       <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
     </div>
-		<mat-card class="metronome" aria-label="Song metronome">
-      <strong>Metronome</strong>
-      <button mat-stroked-button aria-label="Decrease tempo" (click)="changeTempo(-1)">−</button>
-      <span class="tempo-value">{{ song.bpm }} BPM · {{ song.timeSignatureNumerator }}/{{ song.timeSignatureDenominator }}</span>
-      <button mat-stroked-button aria-label="Increase tempo" (click)="changeTempo(1)">+</button>
-      <button mat-flat-button color="primary" (click)="toggleMetronome()">
-        {{ metronomeRunning ? 'Stop' : 'Start' }}
-      </button>
-      <span class="beat-indicator" aria-live="polite">
-        @for (beat of beatNumbers; track beat) {
-          <span [class.active]="currentBeat === beat">{{ beat }}</span>
-        }
-      </span>
-		</mat-card>
+		@if (showMetronome && hasMetronomeSettings) {
+		<div class="metronome-bar" role="group" aria-label="Song metronome">
+	      <button mat-icon-button class="tempo-adjust" aria-label="Decrease tempo" [disabled]="song.bpm === null" (click)="changeTempo(-1)">−</button>
+	      <span class="tempo-value">{{ song.bpm ?? '—' }} BPM</span>
+	      <button mat-icon-button class="tempo-adjust" aria-label="Increase tempo" [disabled]="song.bpm === null" (click)="changeTempo(1)">+</button>
+      <span class="time-signature">{{ song.timeSignatureNumerator }}/{{ song.timeSignatureDenominator }}</span>
+	      <span class="beat-indicator" aria-live="polite" aria-label="Current beat">
+	        @for (beat of beatNumbers; track beat) {
+	          <span [class.active]="currentBeat === beat" [attr.aria-label]="'Beat ' + beat"></span>
+	        }
+	      </span>
+		</div>
+		}
 		<mat-card class="col-span-1 lg-col-span-3" id="desktop-preview">
-      <app-song-preview [song]="song"></app-song-preview>
+      <app-song-preview [song]="song" (showMetronomeChange)="onShowMetronomeChange($event)"></app-song-preview>
       <div id="score"></div>
 		</mat-card>
+		</div>
 		<!-- <mat-card class="nav-desktop col-span-1 flex flex-col items-center">
       <div class="song-controls hidden grid grid-cols-3 gap-3">
         @for (part of song.parts; track $index) {

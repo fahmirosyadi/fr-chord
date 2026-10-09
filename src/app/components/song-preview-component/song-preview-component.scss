@@ -3,6 +3,17 @@
   white-space: pre;
 }
 
+.preview-mode-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 40px;
+}
+
+.show-metronome-button {
+  color: var(--primary-color, #e91e63) !important;
+}
+
 .song-title{
   font-size: 22px;
   margin-bottom: 10px;

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { Song } from '../../models/song.model';
 import { PartPreviewComponent } from '../part-preview-component/part-preview-component';
@@ -12,17 +12,22 @@ import { PartPreviewComponent } from '../part-preview-component/part-preview-com
 })
 export class SongPreviewComponent {
   @Input() song: Song = new Song();
+  @Output() showMetronomeChange = new EventEmitter<boolean>();
 
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
   vocalistMode = false;
+  showMetronome = false;
 
   ngOnInit() {
 
     const saved = localStorage.getItem('vocalistMode');
 
     this.vocalistMode = saved === 'true';
+
+    const savedMetronome = localStorage.getItem('showMetronome');
+    this.showMetronome = savedMetronome === 'true';
 
   }
 
@@ -35,6 +40,12 @@ export class SongPreviewComponent {
       String(this.vocalistMode)
     );
 
+  }
+
+  toggleShowMetronome() {
+    this.showMetronome = !this.showMetronome;
+    localStorage.setItem('showMetronome', String(this.showMetronome));
+    this.showMetronomeChange.emit(this.showMetronome);
   }
 
   nextPart() {

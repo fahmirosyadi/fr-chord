@@ -30,9 +30,9 @@ export class Song extends BaseModel {
   originalKey?: string;
   lowestNote?: string;
   highestNote?: string;
-  bpm: number = 120;
-  timeSignatureNumerator: number = 4;
-  timeSignatureDenominator: number = 4;
+  bpm: number | null = null;
+  timeSignatureNumerator: number | null = null;
+  timeSignatureDenominator: number | null = null;
   status?: number;
   youtubeUrl?: string;
   redirectUrl?: string;

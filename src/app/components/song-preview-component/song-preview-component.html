@@ -1,12 +1,17 @@
 <div class="preview">
 
-  <button mat-raised-button (click)="toggleVocalistMode()" style="margin-bottom: 40px;">
-    <mat-icon>
-      {{ vocalistMode ? 'visibility_off' : 'visibility' }}
-    </mat-icon>
-
-    Vocalist Mode
-  </button>
+  <div class="preview-mode-controls">
+    <button mat-raised-button (click)="toggleVocalistMode()">
+      <mat-icon>{{ vocalistMode ? 'visibility_off' : 'visibility' }}</mat-icon>
+      Vocalist Mode
+    </button>
+    @if (song.bpm != null && song.timeSignatureNumerator != null && song.timeSignatureDenominator != null) {
+      <button mat-raised-button class="show-metronome-button" (click)="toggleShowMetronome()">
+        <mat-icon>{{ showMetronome ? 'graphic_eq' : 'music_off' }}</mat-icon>
+        {{ showMetronome ? 'Hide Metronome' : 'Show Metronome' }}
+      </button>
+    }
+  </div>
   <div class="song-title">{{ song.title }}</div>
   <div class="song-original-key">Original Key: {{ song.originalKey }}</div>
   @if (song.redirectUrl) {

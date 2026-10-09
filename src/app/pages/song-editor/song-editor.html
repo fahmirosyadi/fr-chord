@@ -67,6 +67,7 @@
         <mat-form-field>
           <mat-label>Beat unit</mat-label>
           <mat-select [(ngModel)]="song.timeSignatureDenominator">
+            <mat-option [value]="null">Not set</mat-option>
             <mat-option [value]="2">2 (half note)</mat-option>
             <mat-option [value]="4">4 (quarter note)</mat-option>
             <mat-option [value]="8">8 (eighth note)</mat-option>

@@ -23,9 +23,21 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
   partsContainer!: ElementRef<HTMLDivElement>;
   youtubeEmbedUrl: SafeResourceUrl | null = null;
   metronomeRunning = false;
+  showMetronome = false;
   currentBeat = 0;
   private metronomeTimer?: ReturnType<typeof setInterval>;
   private audioContext?: AudioContext;
+  private readonly resumeAudioOnInteraction = () => {
+    if (this.audioContext?.state === 'suspended') {
+      void this.audioContext.resume().catch(() => undefined);
+    }
+  };
+
+  get hasMetronomeSettings(): boolean {
+    return this.song?.bpm != null
+      && this.song.timeSignatureNumerator != null
+      && this.song.timeSignatureDenominator != null;
+  }
 
   get beatsPerBar(): number {
     return Math.max(1, Math.min(12, this.song.timeSignatureNumerator || 4));
@@ -37,7 +49,7 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
 
   get beatIntervalMs(): number {
     const denominator = this.song.timeSignatureDenominator || 4;
-    return 60000 / this.song.bpm * (4 / denominator);
+    return 60000 / (this.song.bpm || 120) * (4 / denominator);
   }
 
   @Input() song!: Song;
@@ -49,16 +61,17 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
     private sanitizer: DomSanitizer
   ) {}
 
-  async toggleMetronome() {
-    if (this.metronomeRunning) {
-      this.stopMetronome();
-      return;
-    }
-
+  private async startMetronome() {
+    if (this.metronomeRunning || !this.hasMetronomeSettings || !this.song.bpm) return;
     const AudioContextClass = window.AudioContext;
     if (!AudioContextClass) return;
     this.audioContext ??= new AudioContextClass();
-    await this.audioContext.resume();
+    document.addEventListener('pointerdown', this.resumeAudioOnInteraction, { once: true });
+    try {
+      await this.audioContext.resume();
+    } catch {
+      // Browsers may wait for a user gesture before allowing audio playback.
+    }
     this.metronomeRunning = true;
     this.currentBeat = 0;
     this.playBeat();
@@ -69,6 +82,7 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
   }
 
   changeTempo(amount: number) {
+    if (this.song.bpm === null) return;
     this.song.bpm = Math.max(20, Math.min(300, this.song.bpm + amount));
     this.restartMetronomeIfRunning();
   }
@@ -76,7 +90,7 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
   private restartMetronomeIfRunning() {
     if (this.metronomeRunning) {
       this.stopMetronome();
-      void this.toggleMetronome();
+      void this.startMetronome();
     }
   }
 
@@ -104,6 +118,7 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
 
   ngOnDestroy() {
     this.stopMetronome();
+    document.removeEventListener('pointerdown', this.resumeAudioOnInteraction);
     void this.audioContext?.close();
   }
 
@@ -112,10 +127,16 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
       this.song = new Song(this.song);
       this.currentIndex = 0;
       this.setYoutubeUrl();
+      if (this.metronomeRunning) {
+        this.stopMetronome();
+        void this.startMetronome();
+      }
     }
   }
 
   async ngOnInit() {
+
+    this.showMetronome = localStorage.getItem('showMetronome') === 'true';
 
     // const vf = new Factory({
     //   renderer: {
@@ -159,7 +180,12 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
       this.song = new Song(this.song);
     }
 
+    if (this.song) void this.startMetronome();
 
+  }
+
+  onShowMetronomeChange(show: boolean) {
+    this.showMetronome = show;
   }
 
   setYoutubeUrl() {

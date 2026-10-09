@@ -1,22 +1,43 @@
+.chart-area.has-metronome { padding-right: 3.5rem; }
+
 .song-header{
   display:flex;
   align-items:center;
   gap:20px;
 }
 
-.metronome {
+.metronome-bar {
+  position: fixed;
+  top: 50%;
+  right: 0.5rem;
+  z-index: 1001;
+  transform: translateY(-50%);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.2rem;
+  width: 42px;
+  padding: 0.35rem 0.15rem;
+  border: 1px solid color-mix(in srgb, var(--primary-color, #e91e63) 25%, transparent);
+  border-radius: 1.5rem;
+  color: var(--mat-sys-on-surface, #fff);
+  background: var(--mat-card-elevated-container-color, #252525);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
 }
 
-.tempo-value { min-width: 5rem; text-align: center; font-weight: 600; }
-.beat-indicator { display: flex; gap: 0.35rem; }
-.beat-indicator span { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: #ddd; }
-.beat-indicator span.active { background: var(--primary-color, #e91e63); color: white; }
+.metronome-bar button[mat-icon-button] { width: 28px; height: 28px; line-height: 28px; padding: 0; }
+.metronome-bar .tempo-adjust { font-size: 1rem; font-weight: 600; }
+.tempo-value { text-align: center; font-size: 0.7rem; line-height: 1; font-weight: 600; }
+.time-signature { padding: 0.1rem 0; font-size: 0.65rem; opacity: 0.75; }
+.beat-indicator { display: flex; flex-direction: column; align-items: center; gap: 0.16rem; width: 30px; padding: 0.1rem; }
+.beat-indicator span { display: block; width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, currentColor 25%, transparent); }
+.beat-indicator span.active { background: var(--primary-color, #e91e63); transform: scale(1.45); }
+
+@media (max-width: 768px) {
+  .chart-area.has-metronome { padding-right: 3rem; }
+  .metronome-bar { right: 0.25rem; width: 36px; }
+  .metronome-bar button[mat-icon-button] { width: 26px; height: 26px; line-height: 26px; }
+}
 
 .song-controls button.active{
   background:#ffd54f;
