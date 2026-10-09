@@ -16,7 +16,7 @@
         {{ playlist.name }}
       }
     </div>
-    <div class="actions" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+    <div class="actions" role="group" aria-label="Setlist actions">
       @if (isLoggedIn) {
         <button
           mat-icon-button
