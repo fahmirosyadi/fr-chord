@@ -6,7 +6,15 @@
 	<div class="title-bar">
 
     <div class="title">
-      {{ playlist.name }}
+      @if (isEditMode) {
+        <input
+          class="title-input"
+          aria-label="Setlist title"
+          [(ngModel)]="editedPlaylistName"
+          (click)="$event.stopPropagation()">
+      } @else {
+        {{ playlist.name }}
+      }
     </div>
     <div class="actions" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
       @if (isLoggedIn) {
@@ -16,7 +24,7 @@
           [attr.aria-label]="isEditMode ? 'Done editing' : 'Edit setlist'">
 
           <mat-icon>
-            {{ isEditMode ? 'check' : 'swap_vert' }}
+            {{ isEditMode ? 'check' : 'edit' }}
           </mat-icon>
 
         </button>
@@ -44,6 +52,10 @@
     </div>
 
 	</div>
+
+  @if (errorMessage) {
+    <div class="error-message" role="alert">{{ errorMessage }}</div>
+  }
 
 	<!-- SONG LIST -->
 

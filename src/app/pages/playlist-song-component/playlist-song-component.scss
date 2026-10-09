@@ -71,6 +71,10 @@
 }
 
 .title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 8px 4px 8px;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
 
@@ -80,6 +84,21 @@
     line-height: 1.2;
     letter-spacing: -0.3px;
   }
+}
+
+.title-input {
+  width: min(60vw, 420px);
+  padding: 4px 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  color: inherit;
+  background: var(--mat-card-elevated-container-color, transparent);
+  font: inherit;
+}
+
+.error-message {
+  margin: 8px 4px;
+  color: #f44336;
 }
 
 

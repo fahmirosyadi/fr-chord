@@ -13,6 +13,7 @@ import { ResetPasswordComponent } from './pages/reset-password-component/reset-p
 import { PlaylistComponent } from './pages/playlist-component/playlist-component';
 import { PlaylistViewComponent } from './pages/playlist-view-component/playlist-view-component';
 import { PlaylistSongComponent } from './pages/playlist-song-component/playlist-song-component';
+import { UserManagement } from './pages/user/user';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
@@ -38,6 +39,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'role', component: Role },
+      { path: 'user', component: UserManagement },
       { path: 'genre', component: Genre },
       { path: 'song', component: SongComponent },
       { path: 'song-editor', component: SongEditor },

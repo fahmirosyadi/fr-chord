@@ -1,0 +1,24 @@
+<div class="page">
+  <div class="header">
+    <h2>User Management</h2>
+    <button mat-flat-button color="primary" (click)="loadProfiles()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <mat-card class="error-message">{{ errorMessage }}</mat-card>
+  } @else if (loading && profiles.length === 0) {
+    <mat-card>Loading profiles…</mat-card>
+  } @else if (profiles.length === 0) {
+    <mat-card>No profiles found.</mat-card>
+  } @else {
+    <app-data-table
+      [columns]="columns"
+      [data]="filteredProfiles"
+      [loading]="loading"
+      (search)="filterProfiles($event)">
+    </app-data-table>
+  }
+</div>

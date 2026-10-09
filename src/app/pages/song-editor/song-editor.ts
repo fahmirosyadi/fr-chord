@@ -27,6 +27,7 @@ export class SongEditor implements OnInit {
   artists: Artist[] = [];
 
   song = new Song();
+  private tempoTapTimes: number[] = [];
 
   constructor(
     private route: ActivatedRoute
@@ -75,6 +76,25 @@ export class SongEditor implements OnInit {
       horizontalPosition: 'center'
     });
 
+  }
+
+  tapTempo() {
+    const now = performance.now();
+    const lastTap = this.tempoTapTimes[this.tempoTapTimes.length - 1];
+    if (lastTap !== undefined && now - lastTap > 2000) {
+      this.tempoTapTimes = [];
+    }
+
+    this.tempoTapTimes.push(now);
+    if (this.tempoTapTimes.length > 4) this.tempoTapTimes.shift();
+    if (this.tempoTapTimes.length < 4) return;
+
+    const intervals = this.tempoTapTimes.slice(1).map(
+      (time, index) => time - this.tempoTapTimes[index]
+    );
+    const averageInterval = intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length;
+    this.song.bpm = Math.max(20, Math.min(300, Math.round(60000 / averageInterval)));
+    this.tempoTapTimes = [];
   }
 
 

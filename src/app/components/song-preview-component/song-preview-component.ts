@@ -12,22 +12,27 @@ import { PartPreviewComponent } from '../part-preview-component/part-preview-com
 })
 export class SongPreviewComponent {
   @Input() song: Song = new Song();
-  @Output() showMetronomeChange = new EventEmitter<boolean>();
+  @Input() currentBeat = 0;
+  @Input() beatNumbers: number[] = [];
+  @Output() tempoReset = new EventEmitter<void>();
+  @Output() tempoTap = new EventEmitter<void>();
 
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
   vocalistMode = false;
-  showMetronome = false;
+
+  get hasMetronomeSettings(): boolean {
+    return this.song.bpm != null
+      && this.song.timeSignatureNumerator != null
+      && this.song.timeSignatureDenominator != null;
+  }
 
   ngOnInit() {
 
     const saved = localStorage.getItem('vocalistMode');
 
     this.vocalistMode = saved === 'true';
-
-    const savedMetronome = localStorage.getItem('showMetronome');
-    this.showMetronome = savedMetronome === 'true';
 
   }
 
@@ -40,12 +45,6 @@ export class SongPreviewComponent {
       String(this.vocalistMode)
     );
 
-  }
-
-  toggleShowMetronome() {
-    this.showMetronome = !this.showMetronome;
-    localStorage.setItem('showMetronome', String(this.showMetronome));
-    this.showMetronomeChange.emit(this.showMetronome);
   }
 
   nextPart() {

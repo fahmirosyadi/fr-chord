@@ -5,14 +5,35 @@
 
 .preview-mode-controls {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 40px;
 }
 
-.show-metronome-button {
-  color: var(--primary-color, #e91e63) !important;
+.inline-metronome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  max-width: 100%;
+  min-height: 36px;
+  box-sizing: border-box;
+  padding: 0 0.35rem;
+  border: 0;
+  border-radius: 4px;
+  color: var(--mat-sys-on-surface, #fff);
+  background: var(--mat-card-elevated-container-color, #252525);
+  box-shadow: var(--mat-card-elevated-container-elevation, 0 2px 2px rgb(0 0 0 / 20%));
 }
+
+.inline-metronome button[mat-icon-button] { width: 28px; height: 28px; line-height: 28px; padding: 0; }
+.inline-metronome .metronome-tap { font-size: 0.65rem; font-weight: 700; letter-spacing: -0.03em; }
+.inline-metronome .tempo-value { text-align: center; font-size: 0.8rem; line-height: 1; font-weight: 600; }
+.inline-metronome .beat-indicator { display: flex; flex-direction: row; align-items: center; gap: 0.12rem; width: auto; margin-left: 0.3rem; padding: 0.1rem; }
+.inline-metronome .beat-indicator span { display: block; width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, currentColor 25%, transparent); }
+.inline-metronome .beat-indicator span.active { background: var(--primary-color, #e91e63); transform: scale(1.45); }
 
 .song-title{
   font-size: 22px;

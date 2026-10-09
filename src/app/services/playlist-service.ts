@@ -104,6 +104,15 @@ export class PlaylistService {
     if (error) throw error;
   }
 
+  async updateName(id: number, name: string): Promise<void> {
+    const { error } = await this.query
+      .from('playlist')
+      .update({ name })
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
   async delete(id: number): Promise<void> {
 
     const { error } = await this.query

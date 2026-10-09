@@ -5,11 +5,19 @@
       <mat-icon>{{ vocalistMode ? 'visibility_off' : 'visibility' }}</mat-icon>
       Vocalist Mode
     </button>
-    @if (song.bpm != null && song.timeSignatureNumerator != null && song.timeSignatureDenominator != null) {
-      <button mat-raised-button class="show-metronome-button" (click)="toggleShowMetronome()">
-        <mat-icon>{{ showMetronome ? 'graphic_eq' : 'music_off' }}</mat-icon>
-        {{ showMetronome ? 'Hide Metronome' : 'Show Metronome' }}
-      </button>
+    @if (hasMetronomeSettings) {
+      <div class="inline-metronome" role="group" aria-label="Song metronome">
+        <button mat-icon-button aria-label="Reset tempo" (click)="tempoReset.emit()">
+          <mat-icon>restart_alt</mat-icon>
+        </button>
+        <span class="tempo-value">{{ song.bpm }} BPM</span>
+        <span class="beat-indicator" aria-live="polite" aria-label="Current beat">
+          @for (beat of beatNumbers; track beat) {
+            <span [class.active]="currentBeat === beat" [attr.aria-label]="'Beat ' + beat"></span>
+          }
+        </span>
+        <button mat-icon-button class="metronome-tap" aria-label="Tap tempo four times" (click)="tempoTap.emit()">TAP</button>
+      </div>
     }
   </div>
   <div class="song-title">{{ song.title }}</div>

@@ -9,14 +9,13 @@ import {
   CdkDropList,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { MatIcon } from "@angular/material/icon";
-import { Song } from '../../models/song.model';
 import { AuthService } from '../../services/auth-service';
+import { SharedModule } from '../../shared.module';
 
 @Component({
   selector: 'app-playlist-song-component',
   imports: [
-    MatIcon,
+    SharedModule,
     CdkDrag,
     CdkDragHandle,
     CdkDropList,
@@ -30,9 +29,33 @@ export class PlaylistSongComponent implements OnInit  {
   isEditMode = false;
   isDeleteMode = false;
   isLoggedIn = false;
+  errorMessage = '';
+  editedPlaylistName = '';
 
-  toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
+  async toggleEditMode() {
+    if (!this.isEditMode) {
+      this.errorMessage = '';
+      this.editedPlaylistName = this.playlist.name ?? '';
+      this.isEditMode = true;
+      return;
+    }
+
+    const name = this.editedPlaylistName.trim();
+    if (!name) {
+      this.errorMessage = 'Setlist title cannot be empty.';
+      return;
+    }
+
+    try {
+      if (name !== this.playlist.name) {
+        await this.service.updateName(this.playlist.id, name);
+        this.playlist.name = name;
+      }
+      this.errorMessage = '';
+      this.isEditMode = false;
+    } catch (error) {
+      this.errorMessage = error instanceof Error ? error.message : 'Could not save setlist title.';
+    }
   }
 
   toggleDeleteMode() {

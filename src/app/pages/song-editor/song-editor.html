@@ -54,10 +54,16 @@
         <mat-label>Highest Note</mat-label>
         <input matInput [(ngModel)]="song.highestNote">
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Tempo (BPM)</mat-label>
-        <input matInput type="number" min="20" max="300" [(ngModel)]="song.bpm">
-      </mat-form-field>
+      <div class="tempo-field-row">
+        <mat-form-field>
+          <mat-label>Tempo (BPM)</mat-label>
+          <input matInput type="number" min="20" max="300" [(ngModel)]="song.bpm">
+        </mat-form-field>
+        <button mat-stroked-button type="button" class="tempo-tap-button" aria-label="Tap tempo four times" (click)="tapTempo()">
+          <mat-icon>graphic_eq</mat-icon>
+          <span>TAP</span>
+        </button>
+      </div>
       <div class="time-signature-fields">
         <mat-form-field>
           <mat-label>Beats per bar</mat-label>

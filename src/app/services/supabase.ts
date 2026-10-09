@@ -24,9 +24,9 @@ export class Supabase {
     return data;
   }
 
-  async getUsers() {
+  async getProfiles() {
     const { data, error } = await this.supabase
-      .from('user')
+      .from('profiles')
       .select('*');
 
     if (error) throw error;

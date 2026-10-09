@@ -15,28 +15,21 @@
         </iframe>
       </div>
     }
-    <div class="chart-area" [class.has-metronome]="showMetronome && hasMetronomeSettings">
+    <div class="chart-area">
     <div class="grid grid-cols-4 gap-2" style="width: 300px; margin-top: 20px; margin-bottom: 20px;">
       <button mat-raised-button (click)="song.transpose(-1)">-</button>
       <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
       <button mat-raised-button (click)="song.transpose(1)">+</button>
       <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
     </div>
-		@if (showMetronome && hasMetronomeSettings) {
-		<div class="metronome-bar" role="group" aria-label="Song metronome">
-	      <button mat-icon-button class="tempo-adjust" aria-label="Decrease tempo" [disabled]="song.bpm === null" (click)="changeTempo(-1)">−</button>
-	      <span class="tempo-value">{{ song.bpm ?? '—' }} BPM</span>
-	      <button mat-icon-button class="tempo-adjust" aria-label="Increase tempo" [disabled]="song.bpm === null" (click)="changeTempo(1)">+</button>
-      <span class="time-signature">{{ song.timeSignatureNumerator }}/{{ song.timeSignatureDenominator }}</span>
-	      <span class="beat-indicator" aria-live="polite" aria-label="Current beat">
-	        @for (beat of beatNumbers; track beat) {
-	          <span [class.active]="currentBeat === beat" [attr.aria-label]="'Beat ' + beat"></span>
-	        }
-	      </span>
-		</div>
-		}
 		<mat-card class="col-span-1 lg-col-span-3" id="desktop-preview">
-      <app-song-preview [song]="song" (showMetronomeChange)="onShowMetronomeChange($event)"></app-song-preview>
+      <app-song-preview
+        [song]="song"
+        [currentBeat]="currentBeat"
+        [beatNumbers]="beatNumbers"
+        (tempoReset)="resetTempo()"
+        (tempoTap)="tapTempo()">
+      </app-song-preview>
       <div id="score"></div>
 		</mat-card>
 		</div>
