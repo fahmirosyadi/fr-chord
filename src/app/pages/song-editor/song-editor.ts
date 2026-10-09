@@ -60,21 +60,32 @@ export class SongEditor implements OnInit {
   }
 
   async saveSong() {
-    if (this.songId) {
-      await this.service.update(this.songId, this.song);
-    } else {
-      const createdSong = await this.service.create(this.song);
-      this.songId = createdSong.id;
-      this.song = createdSong;
+    try {
+      if (this.songId) {
+        await this.service.update(this.songId, this.song);
+      } else {
+        const createdSong = await this.service.create(this.song);
+        this.songId = createdSong.id;
+        this.song = createdSong;
 
-      this.router.navigate(['/song-editor', createdSong.id]);
+        this.router.navigate(['/song-editor', createdSong.id]);
+      }
+
+      this.snackBar.open('Song saved!', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : 'Could not save song. You may not have permission to edit it.';
+      this.snackBar.open(message, 'Close', {
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
     }
-
-    this.snackBar.open('Song saved!', 'Close', {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'center'
-    });
 
   }
 

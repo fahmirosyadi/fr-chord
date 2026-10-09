@@ -9,6 +9,7 @@ import { NavbarComponent } from './components/navbar/navbar';
 import { ThemeService } from './services/theme-service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from './services/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,14 @@ export class App {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
   sidenavOpened = false;
 
-  constructor(public themeService: ThemeService, private router: Router) {
+  isAuthenticated = false;
+
+  constructor(
+    public themeService: ThemeService,
+    public authService: AuthService,
+    private router: Router
+  ) {
+    this.authService.isAuthenticated$.subscribe(value => this.isAuthenticated = value);
     this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: any) => {
@@ -42,5 +50,15 @@ export class App {
 
   ngOnInit() {
     this.themeService.loadTheme();
+  }
+
+  async onAuthAction() {
+    if (this.isAuthenticated) {
+      await this.authService.signOut();
+      await this.router.navigate(['/']);
+      return;
+    }
+
+    await this.router.navigate(['/login']);
   }
 }

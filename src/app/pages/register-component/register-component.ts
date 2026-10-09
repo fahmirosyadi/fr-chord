@@ -11,6 +11,7 @@ import { SharedModule } from '../../shared.module';
 })
 export class RegisterComponent {
 
+  fullName = '';
   email = '';
   password = '';
   confirmPassword = '';
@@ -25,6 +26,11 @@ export class RegisterComponent {
   async register() {
     this.errorMessage = '';
 
+    if (!this.fullName.trim()) {
+      this.errorMessage = 'Name is required';
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
@@ -32,7 +38,7 @@ export class RegisterComponent {
 
     this.loading = true;
 
-    const { error } = await this.auth.signUp(this.email, this.password);
+    const { error } = await this.auth.signUp(this.email, this.password, this.fullName.trim());
 
     this.loading = false;
 

@@ -1,0 +1,19 @@
+.profile-container {
+  max-width: 520px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.profile-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.success-message {
+  color: #2e7d32;
+}

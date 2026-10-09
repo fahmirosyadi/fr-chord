@@ -34,6 +34,7 @@
 
       <mat-divider></mat-divider>
 
+      @if (isAuthenticated) {
       <!-- MASTER -->
       <div mat-subheader>Master</div>
 
@@ -74,25 +75,24 @@
       </a>
 
       <mat-divider></mat-divider>
+      }
 
       <!-- ACCOUNT -->
       <div mat-subheader>Account</div>
 
-      <a
-        mat-list-item
-        (click)="sidenav.close()">
-
-        <mat-icon matListItemIcon>person</mat-icon>
-        <span matListItemTitle>My Profile</span>
-
-      </a>
+      @if (isAuthenticated) {
+        <a mat-list-item routerLink="/profile" (click)="sidenav.close()">
+          <mat-icon matListItemIcon>person</mat-icon>
+          <span matListItemTitle>My Profile</span>
+        </a>
+      }
 
       <a
         mat-list-item
-        (click)="sidenav.close()">
+        (click)="onAuthAction(); sidenav.close()">
 
-        <mat-icon matListItemIcon>logout</mat-icon>
-        <span matListItemTitle>Logout</span>
+        <mat-icon matListItemIcon>{{ isAuthenticated ? 'logout' : 'login' }}</mat-icon>
+        <span matListItemTitle>{{ isAuthenticated ? 'Logout' : 'Login' }}</span>
 
       </a>
 

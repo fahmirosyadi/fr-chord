@@ -26,10 +26,12 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
 
-      <button mat-button [matMenuTriggerFor]="masterMenu">
-        Master
-        <mat-icon>arrow_drop_down</mat-icon>
-      </button>
+      @if (isAuthenticated) {
+        <button mat-button [matMenuTriggerFor]="masterMenu">
+          Master
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+      }
     </div>
 
     <mat-menu #themeMenu="matMenu">
@@ -64,14 +66,15 @@
     </button>
 
     <mat-menu #profileMenu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>person</mat-icon>
-        My Profile
-      </button>
-
-      <button mat-menu-item>
-        <mat-icon>logout</mat-icon>
-        Logout
+      @if (isAuthenticated) {
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          My Profile
+        </button>
+      }
+      <button mat-menu-item (click)="onAuthAction()">
+        <mat-icon>{{ isAuthenticated ? 'logout' : 'login' }}</mat-icon>
+        {{ isAuthenticated ? 'Logout' : 'Login' }}
       </button>
     </mat-menu>
   </div>

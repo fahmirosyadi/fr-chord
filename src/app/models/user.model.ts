@@ -45,6 +45,7 @@ export class AppMetadata {
 }
 
 export class UserMetadata {
+  full_name?: string;
   email?: string;
   email_verified?: boolean;
   phone_verified?: boolean;

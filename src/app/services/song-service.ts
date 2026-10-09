@@ -88,10 +88,17 @@ export class SongService {
   async update(id: number, song: Song): Promise<void> {
     console.log(song, song.payload)
     const payload = song.payload;
-    const { error } = await this.query
-      .from('song').update(payload).eq('id', id);
+    const { data, error } = await this.query
+      .from('song')
+      .update(payload)
+      .eq('id', id)
+      .select('id')
+      .maybeSingle();
 
     if (error) throw error;
+    if (!data) {
+      throw new Error('You can only edit songs that you own.');
+    }
   }
 
   async delete(id: number): Promise<void> {
