@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth-service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedModule } from '../../shared.module';
 
 @Component({
@@ -12,25 +11,32 @@ import { SharedModule } from '../../shared.module';
 export class ResetPasswordComponent {
 
   password = '';
+  confirmPassword = '';
+  saving = false;
+  errorMessage = '';
+  successMessage = '';
 
-  constructor(private authService: AuthService, private snackBar: MatSnackBar) {}
+  constructor(private authService: AuthService) {}
 
   async reset() {
-    const { error } = await this.authService.updatePassword(this.password);
+    this.errorMessage = '';
+    this.successMessage = '';
 
-    if (error) {
-      this.snackBar.open(error.message, 'Close', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center'
-      });
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match.';
       return;
     }
 
-    this.snackBar.open('Password updated successfully!', 'Close', {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'center'
-    });
+    this.saving = true;
+    try {
+      const { error } = await this.authService.updatePassword(this.password);
+      if (error) throw error;
+      this.successMessage = 'Password updated successfully. You can now log in with your new password.';
+    } catch (error) {
+      this.errorMessage = error instanceof Error ? error.message : 'Could not update your password.';
+    } finally {
+      this.saving = false;
+    }
+
   }
 }

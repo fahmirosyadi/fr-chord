@@ -15,6 +15,7 @@ import { PlaylistViewComponent } from './pages/playlist-view-component/playlist-
 import { PlaylistSongComponent } from './pages/playlist-song-component/playlist-song-component';
 import { UserManagement } from './pages/user/user';
 import { ProfileComponent } from './pages/profile/profile-component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password-component';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
@@ -26,6 +27,10 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent
   },
   // ADD THIS
   {

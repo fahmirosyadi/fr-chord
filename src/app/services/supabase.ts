@@ -10,7 +10,8 @@ export class Supabase {
   constructor() {
     this.supabase = createClient(
       'https://erqutgwxwuzepeugisqh.supabase.co',
-      'sb_publishable_joc6Z8G0Jupbbw5LEfqCPQ_wykr-LxQ'
+      'sb_publishable_joc6Z8G0Jupbbw5LEfqCPQ_wykr-LxQ',
+      { auth: { flowType: 'pkce' } }
     );
   }
 

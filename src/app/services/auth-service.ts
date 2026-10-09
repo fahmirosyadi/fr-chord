@@ -87,7 +87,7 @@ export class AuthService {
   // SEND RESET EMAIL
   async forgotPassword(email: string) {
     return await this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'http://localhost:4200/reset-password'
+      redirectTo: `${window.location.origin}/reset-password`
     });
   }
 

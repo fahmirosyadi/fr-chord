@@ -1,8 +1,10 @@
 .register-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: flex-start;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+  padding: 24px 16px 0;
 }
 
 .full-width {
