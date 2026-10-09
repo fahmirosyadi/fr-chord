@@ -63,6 +63,7 @@ export class PlaylistService {
         playlist_song(
           id,
           order,
+          key,
           song(*)
         )
       `)
@@ -136,6 +137,15 @@ export class PlaylistService {
     if (error) {
       throw error;
     }
+  }
+
+  async updateSongKey(playlistSongId: number, key: string | null): Promise<void> {
+    const { error } = await this.query
+      .from('playlist_song')
+      .update({ key })
+      .eq('id', playlistSongId);
+
+    if (error) throw error;
   }
 
   async addSong(

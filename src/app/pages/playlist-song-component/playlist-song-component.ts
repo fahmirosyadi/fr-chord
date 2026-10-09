@@ -11,6 +11,8 @@ import {
 } from '@angular/cdk/drag-drop';
 import { AuthService } from '../../services/auth-service';
 import { SharedModule } from '../../shared.module';
+import { Song } from '../../models/song.model';
+import { PlaylistSong } from '../../models/playlist-song.model';
 
 @Component({
   selector: 'app-playlist-song-component',
@@ -27,15 +29,18 @@ export class PlaylistSongComponent implements OnInit  {
 
   playlist = new Playlist();
   isEditMode = false;
+  isOrderMode = false;
   isDeleteMode = false;
   isLoggedIn = false;
   errorMessage = '';
   editedPlaylistName = '';
+  readonly keys = Song.CHORDS;
 
   async toggleEditMode() {
     if (!this.isEditMode) {
       this.errorMessage = '';
       this.editedPlaylistName = this.playlist.name ?? '';
+      this.isOrderMode = false;
       this.isEditMode = true;
       return;
     }
@@ -60,6 +65,24 @@ export class PlaylistSongComponent implements OnInit  {
 
   toggleDeleteMode() {
     this.isDeleteMode = !this.isDeleteMode;
+  }
+
+  toggleOrderMode() {
+    this.isOrderMode = !this.isOrderMode;
+    if (this.isOrderMode) this.isEditMode = false;
+  }
+
+  async updateSongKey(entry: PlaylistSong, key: string | null) {
+    const previousKey = entry.key ?? null;
+    entry.key = key;
+    this.errorMessage = '';
+
+    try {
+      await this.service.updateSongKey(entry.id, key);
+    } catch (error) {
+      entry.key = previousKey;
+      this.errorMessage = error instanceof Error ? error.message : 'Could not save setlist song key.';
+    }
   }
 
   constructor(

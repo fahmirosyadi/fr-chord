@@ -20,16 +20,6 @@
       @if (isLoggedIn) {
         <button
           mat-icon-button
-          (click)="toggleEditMode()"
-          [attr.aria-label]="isEditMode ? 'Done editing' : 'Edit setlist'">
-
-          <mat-icon>
-            {{ isEditMode ? 'check' : 'edit' }}
-          </mat-icon>
-
-        </button>
-        <button
-          mat-icon-button
           (click)="addSong()"
           [attr.aria-label]="'Add song to setlist'">
 
@@ -40,11 +30,31 @@
         </button>
         <button
           mat-icon-button
+          (click)="toggleEditMode()"
+          [attr.aria-label]="isEditMode ? 'Done editing' : 'Edit setlist'">
+
+          <mat-icon>
+            {{ isEditMode ? 'check' : 'edit' }}
+          </mat-icon>
+
+        </button>
+        <button
+          mat-icon-button
           (click)="toggleDeleteMode()"
           [attr.aria-label]="isDeleteMode ? 'Done deleting' : 'Delete song from setlist'">
 
           <mat-icon>
             {{ isDeleteMode ? 'check' : 'delete' }}
+          </mat-icon>
+
+        </button>
+        <button
+          mat-icon-button
+          (click)="toggleOrderMode()"
+          [attr.aria-label]="isOrderMode ? 'Done reordering' : 'Reorder setlist'">
+
+          <mat-icon>
+            {{ isOrderMode ? 'check' : 'swap_vert' }}
           </mat-icon>
 
         </button>
@@ -68,12 +78,12 @@
         class="song-item"
         (click)="view(song.song.id)"
         cdkDrag
-        [cdkDragDisabled]="!isLoggedIn || !isEditMode"
+        [cdkDragDisabled]="!isLoggedIn || !isOrderMode"
         matRipple>
 
         <!-- DRAG HANDLE -->
 
-        @if (isEditMode) {
+        @if (isOrderMode) {
           <div
             class="drag-handle"
             cdkDragHandle
@@ -105,12 +115,28 @@
         <div class="song-content">
 
           <div class="title">
-            {{ song.song.title }} {{ song.song.key ? '(' + song.song.key + ')' : '' }}
+            {{ song.song.title }} {{ (song.key || song.song.key) ? '(' + (song.key || song.song.key) + ')' : '' }}
           </div>
 
           <div class="artist">
             {{ song.song.artist }}
           </div>
+
+          @if (isEditMode) {
+            <mat-form-field class="setlist-key-field" subscriptSizing="dynamic">
+              <mat-label>Setlist key</mat-label>
+              <mat-select
+                [value]="song.key ?? null"
+                (selectionChange)="updateSongKey(song, $event.value)"
+                (click)="$event.stopPropagation()"
+                (pointerdown)="$event.stopPropagation()">
+                <mat-option [value]="null">Song key ({{ song.song.key }})</mat-option>
+                @for (key of keys; track key) {
+                  <mat-option [value]="key">{{ key }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
 
         </div>
 

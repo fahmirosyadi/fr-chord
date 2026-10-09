@@ -5,6 +5,7 @@ import { Song } from "./song.model";
 export class PlaylistSong extends BaseModel {
   id!: number;
   order?: number;
+  key?: string | null;
   song!: Song;
 
   constructor(data?: Partial<PlaylistSong>) {

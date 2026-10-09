@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlaylistService } from '../../services/playlist-service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Playlist } from '../../models/playlist.model';
+import { Song } from '../../models/song.model';
 
 @Component({
   selector: 'app-playlist-view-component',
@@ -17,10 +18,12 @@ export class PlaylistViewComponent implements OnInit {
   playlist = new Playlist();
 
   currentIndex = 0;
+  currentSong = new Song();
 
   nextSong() {
     if (this.currentIndex < (this.playlist.playlistSong || []).length - 1) {
       this.currentIndex++;
+      this.updateCurrentSong();
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -31,6 +34,7 @@ export class PlaylistViewComponent implements OnInit {
   previousSong() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
+      this.updateCurrentSong();
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -47,6 +51,17 @@ export class PlaylistViewComponent implements OnInit {
 
   backToSetlist() {
     this.router.navigate(['/setlist-song/', this.playlist.id]);
+  }
+
+  private updateCurrentSong() {
+    const entry = this.playlist.playlistSong?.[this.currentIndex];
+    if (!entry?.song) return;
+
+    this.currentSong = new Song(entry.song);
+    if (entry.key) {
+      this.currentSong.key = entry.key;
+      this.currentSong.tmpCurrentKey = entry.key;
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -72,6 +87,8 @@ export class PlaylistViewComponent implements OnInit {
           }
 
         }
+
+        this.updateCurrentSong();
 
       }
     }
