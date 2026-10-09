@@ -1,5 +1,5 @@
 import { Component, ViewChild, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,7 @@ import { AuthService } from './services/auth-service';
     MatButtonModule,
     MatIconModule,
     MatListModule,
+    RouterLink,
     RouterOutlet,
     NavbarComponent
 ],
