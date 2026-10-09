@@ -6,3 +6,7 @@ textarea{
   width: 100%;
   font-family: monospace;
 }
+
+.time-signature-fields { display: flex; align-items: center; gap: 0.5rem; }
+.time-signature-fields mat-form-field { flex: 1; min-width: 0; }
+.time-signature-divider { padding-bottom: 1.25rem; font-size: 1.25rem; }

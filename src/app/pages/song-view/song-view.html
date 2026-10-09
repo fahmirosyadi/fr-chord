@@ -21,6 +21,20 @@
       <button mat-raised-button (click)="song.transpose(1)">+</button>
       <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
     </div>
+		<mat-card class="metronome" aria-label="Song metronome">
+      <strong>Metronome</strong>
+      <button mat-stroked-button aria-label="Decrease tempo" (click)="changeTempo(-1)">−</button>
+      <span class="tempo-value">{{ song.bpm }} BPM · {{ song.timeSignatureNumerator }}/{{ song.timeSignatureDenominator }}</span>
+      <button mat-stroked-button aria-label="Increase tempo" (click)="changeTempo(1)">+</button>
+      <button mat-flat-button color="primary" (click)="toggleMetronome()">
+        {{ metronomeRunning ? 'Stop' : 'Start' }}
+      </button>
+      <span class="beat-indicator" aria-live="polite">
+        @for (beat of beatNumbers; track beat) {
+          <span [class.active]="currentBeat === beat">{{ beat }}</span>
+        }
+      </span>
+		</mat-card>
 		<mat-card class="col-span-1 lg-col-span-3" id="desktop-preview">
       <app-song-preview [song]="song"></app-song-preview>
       <div id="score"></div>

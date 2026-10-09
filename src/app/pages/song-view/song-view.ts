@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Supabase } from '../../services/supabase';
 import { SharedModule } from '../../shared.module';
@@ -16,12 +16,29 @@ import { Factory } from 'vexflow';
   templateUrl: './song-view.html',
   styleUrl: './song-view.scss'
 })
-export class SongView implements OnInit, OnChanges  {
+export class SongView implements OnInit, OnChanges, OnDestroy  {
 
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })
   partsContainer!: ElementRef<HTMLDivElement>;
   youtubeEmbedUrl: SafeResourceUrl | null = null;
+  metronomeRunning = false;
+  currentBeat = 0;
+  private metronomeTimer?: ReturnType<typeof setInterval>;
+  private audioContext?: AudioContext;
+
+  get beatsPerBar(): number {
+    return Math.max(1, Math.min(12, this.song.timeSignatureNumerator || 4));
+  }
+
+  get beatNumbers(): number[] {
+    return Array.from({ length: this.beatsPerBar }, (_, index) => index + 1);
+  }
+
+  get beatIntervalMs(): number {
+    const denominator = this.song.timeSignatureDenominator || 4;
+    return 60000 / this.song.bpm * (4 / denominator);
+  }
 
   @Input() song!: Song;
 
@@ -31,6 +48,64 @@ export class SongView implements OnInit, OnChanges  {
     private service: SongService,
     private sanitizer: DomSanitizer
   ) {}
+
+  async toggleMetronome() {
+    if (this.metronomeRunning) {
+      this.stopMetronome();
+      return;
+    }
+
+    const AudioContextClass = window.AudioContext;
+    if (!AudioContextClass) return;
+    this.audioContext ??= new AudioContextClass();
+    await this.audioContext.resume();
+    this.metronomeRunning = true;
+    this.currentBeat = 0;
+    this.playBeat();
+    this.metronomeTimer = setInterval(
+      () => this.playBeat(),
+      this.beatIntervalMs
+    );
+  }
+
+  changeTempo(amount: number) {
+    this.song.bpm = Math.max(20, Math.min(300, this.song.bpm + amount));
+    this.restartMetronomeIfRunning();
+  }
+
+  private restartMetronomeIfRunning() {
+    if (this.metronomeRunning) {
+      this.stopMetronome();
+      void this.toggleMetronome();
+    }
+  }
+
+  private playBeat() {
+    if (!this.audioContext) return;
+    this.currentBeat = this.currentBeat % this.beatsPerBar + 1;
+
+    const oscillator = this.audioContext.createOscillator();
+    const gain = this.audioContext.createGain();
+    oscillator.frequency.value = this.currentBeat === 1 ? 1200 : 800;
+    gain.gain.setValueAtTime(0.7, this.audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.06);
+    oscillator.connect(gain);
+    gain.connect(this.audioContext.destination);
+    oscillator.start();
+    oscillator.stop(this.audioContext.currentTime + 0.06);
+  }
+
+  private stopMetronome() {
+    if (this.metronomeTimer) clearInterval(this.metronomeTimer);
+    this.metronomeTimer = undefined;
+    this.metronomeRunning = false;
+    this.currentBeat = 0;
+  }
+
+  ngOnDestroy() {
+    this.stopMetronome();
+    void this.audioContext?.close();
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['song'] && this.song) {

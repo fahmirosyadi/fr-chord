@@ -55,6 +55,26 @@
         <input matInput [(ngModel)]="song.highestNote">
       </mat-form-field>
       <mat-form-field>
+        <mat-label>Tempo (BPM)</mat-label>
+        <input matInput type="number" min="20" max="300" [(ngModel)]="song.bpm">
+      </mat-form-field>
+      <div class="time-signature-fields">
+        <mat-form-field>
+          <mat-label>Beats per bar</mat-label>
+          <input matInput type="number" min="1" max="12" [(ngModel)]="song.timeSignatureNumerator">
+        </mat-form-field>
+        <span class="time-signature-divider">/</span>
+        <mat-form-field>
+          <mat-label>Beat unit</mat-label>
+          <mat-select [(ngModel)]="song.timeSignatureDenominator">
+            <mat-option [value]="2">2 (half note)</mat-option>
+            <mat-option [value]="4">4 (quarter note)</mat-option>
+            <mat-option [value]="8">8 (eighth note)</mat-option>
+            <mat-option [value]="16">16 (sixteenth note)</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-form-field>
         <mat-label>YouTube URL</mat-label>
         <input matInput [(ngModel)]="song.youtubeUrl">
       </mat-form-field>
