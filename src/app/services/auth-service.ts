@@ -87,7 +87,7 @@ export class AuthService {
   // SEND RESET EMAIL
   async forgotPassword(email: string) {
     return await this.supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`
+      redirectTo: 'https://fr-chord.vercel.app/reset-password'
     });
   }
 
