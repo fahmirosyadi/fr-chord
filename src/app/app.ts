@@ -34,6 +34,7 @@ export class App {
   sidenavOpened = false;
 
   isAuthenticated = false;
+  isAdmin = false;
 
   constructor(
     public themeService: ThemeService,
@@ -41,6 +42,7 @@ export class App {
     private router: Router
   ) {
     this.authService.isAuthenticated$.subscribe(value => this.isAuthenticated = value);
+    this.authService.isAdmin$.subscribe(value => this.isAdmin = value);
     this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: any) => {

@@ -35,6 +35,22 @@
 .inline-metronome .beat-indicator span { display: block; width: 5px; height: 5px; border-radius: 50%; background: color-mix(in srgb, currentColor 25%, transparent); }
 .inline-metronome .beat-indicator span.active { background: var(--primary-color, #e91e63); transform: scale(1.45); }
 
+.vocalist-select {
+  width: 180px;
+  margin: 0 0 0 0.35rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transform: scale(0.95);
+  transform-origin: left center;
+  font-family: Roboto, sans-serif;
+}
+
+.vocalist-select .mat-mdc-form-field-infix {
+  min-height: 40px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 .song-title{
   font-size: 22px;
   margin-bottom: 10px;

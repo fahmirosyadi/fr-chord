@@ -1,0 +1,43 @@
+.vocalist-page {
+  display: grid;
+  gap: 16px;
+}
+
+.vocalist-form-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.vocalist-form-card h3 {
+  margin: 0;
+}
+
+.vocalist-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 56px;
+}
+
+.form-error {
+  display: block;
+}
+
+.list-message {
+  padding: 16px;
+}
+
+@media (max-width: 700px) {
+  .vocalist-form {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

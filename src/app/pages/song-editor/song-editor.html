@@ -48,11 +48,13 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Lowest Note</mat-label>
-        <input matInput [(ngModel)]="song.lowestNote">
+        <input matInput [(ngModel)]="song.lowestNote" placeholder="e.g. 5(2)">
+        <mat-hint>Scale degree with octave, relative to the song’s key</mat-hint>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Highest Note</mat-label>
-        <input matInput [(ngModel)]="song.highestNote">
+        <input matInput [(ngModel)]="song.highestNote" placeholder="e.g. 5(4)">
+        <mat-hint>Scale degree with octave, relative to the song’s key</mat-hint>
       </mat-form-field>
       <div class="tempo-field-row">
         <mat-form-field>

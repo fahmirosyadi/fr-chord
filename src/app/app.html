@@ -74,6 +74,17 @@
 
       </a>
 
+      @if (isAdmin) {
+        <a
+          mat-list-item
+          routerLink="/vocalist"
+          (click)="sidenav.close()">
+
+          Vocalist
+
+        </a>
+      }
+
       <mat-divider></mat-divider>
       }
 

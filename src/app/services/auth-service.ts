@@ -11,11 +11,14 @@ export class AuthService {
   readonly supabase: Supabase['supabase'];
   private readonly authenticatedSubject = new BehaviorSubject(false);
   readonly isAuthenticated$ = this.authenticatedSubject.asObservable();
+  private readonly adminSubject = new BehaviorSubject(false);
+  readonly isAdmin$ = this.adminSubject.asObservable();
 
   constructor(supabaseService: Supabase) {
     this.supabase = supabaseService.supabase;
     this.supabase.auth.onAuthStateChange((_event, session) => {
       this.authenticatedSubject.next(!!session?.user);
+      this.adminSubject.next(session?.user.app_metadata?.['role'] === 'admin');
     });
   }
 

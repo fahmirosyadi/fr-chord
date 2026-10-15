@@ -16,6 +16,8 @@ import { PlaylistSongComponent } from './pages/playlist-song-component/playlist-
 import { UserManagement } from './pages/user/user';
 import { ProfileComponent } from './pages/profile/profile-component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password-component';
+import { VocalistManagement } from './pages/vocalist/vocalist-management';
+import { supabaseAdminGuard } from './supabase-admin-guard';
 
 export const routes: Routes = [
   { path: '', component: SongListComponent },
@@ -47,6 +49,7 @@ export const routes: Routes = [
       { path: 'role', component: Role },
       { path: 'user', component: UserManagement },
       { path: 'genre', component: Genre },
+      { path: 'vocalist', component: VocalistManagement, canActivate: [supabaseAdminGuard] },
       { path: 'song', component: SongComponent },
       { path: 'song-editor', component: SongEditor },
       { path: 'song-editor/:id', component: SongEditor },

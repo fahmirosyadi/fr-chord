@@ -3,6 +3,47 @@
   (swipeleft)="nextPart()"
   (swiperight)="prevPart()">
   <div class="">
+    @if (showRangePopup && selectedVocalist) {
+      <section class="range-popup" [class.range-fits]="rangeFit === 'fits'" [class.range-partial]="rangeFit === 'partial'" [class.range-outside]="rangeFit === 'outside'" aria-live="polite">
+        <div class="range-popup-header">
+          <div>
+            <strong>{{ selectedVocalist.name }} · {{ song.tmpCurrentKey }}</strong>
+            <p>{{ rangeStatusMessage }}</p>
+          </div>
+          <button mat-icon-button type="button" aria-label="Close range comparison" (click)="showRangePopup = false">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        @if (songRange && vocalistRange) {
+          <div class="range-chart">
+            <div class="range-row">
+              <span class="range-row-label">Vocalist</span>
+              <div class="range-track">
+                <span class="range-fill vocalist-fill" [ngStyle]="rangeBarStyle(vocalistRange)"></span>
+              </div>
+              <span class="range-row-notes">{{ vocalistRangeLabel }}</span>
+            </div>
+            <div class="range-row">
+              <span class="range-row-label">Song</span>
+              <div class="range-track">
+                <span class="range-fill song-fill" [class.fit]="rangeFit === 'fits'" [class.partial]="rangeFit === 'partial'" [class.outside]="rangeFit === 'outside'" [ngStyle]="rangeBarStyle(displaySongRange)"></span>
+              </div>
+              <span class="range-row-notes">{{ songRangeLabel }}</span>
+            </div>
+          </div>
+        } @else {
+          <p class="range-invalid-message">
+            @if (!songRange) {
+              Set the song’s lowest and highest notes as scale degrees with octaves, such as 5(2) and 5(4), relative to its saved key.
+            } @else {
+              Set {{ selectedVocalist.name }}’s range with pitches and octaves, such as G2 and C4.
+            }
+          </p>
+        }
+      </section>
+    }
+
     @if (youtubeEmbedUrl) {
       <div class="col-span-3">
         <iframe
@@ -17,9 +58,9 @@
     }
     <div class="chart-area">
     <div class="grid grid-cols-4 gap-2" style="width: 300px; margin-top: 20px; margin-bottom: 20px;">
-      <button mat-raised-button (click)="song.transpose(-1)">-</button>
+      <button mat-raised-button (click)="transposeSong(-1)">-</button>
       <button mat-raised-button disabled="">{{song.tmpCurrentKey}}</button>
-      <button mat-raised-button (click)="song.transpose(1)">+</button>
+      <button mat-raised-button (click)="transposeSong(1)">+</button>
       <button mat-raised-button disabled="">{{song.getTransposeValue()}}</button>
     </div>
 		<mat-card class="col-span-1 lg-col-span-3" id="desktop-preview">
@@ -27,9 +68,16 @@
         [song]="song"
         [currentBeat]="currentBeat"
         [beatNumbers]="beatNumbers"
+        [vocalists]="vocalists"
+        [showVocalistSelector]="songRange !== null"
+        [selectedVocalistId]="selectedVocalistId"
         (tempoReset)="resetTempo()"
-        (tempoTap)="tapTempo()">
+        (tempoTap)="tapTempo()"
+        (vocalistSelected)="onVocalistSelected($event)">
       </app-song-preview>
+      @if (vocalistLoadError) {
+        <p class="vocalist-load-error">{{ vocalistLoadError }}</p>
+      }
       <div id="score"></div>
 		</mat-card>
 		</div>

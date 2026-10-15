@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewC
 import { SharedModule } from '../../shared.module';
 import { Song } from '../../models/song.model';
 import { PartPreviewComponent } from '../part-preview-component/part-preview-component';
+import { Vocalist } from '../../services/vocalist-service';
 
 @Component({
   selector: 'app-song-preview',
@@ -14,8 +15,12 @@ export class SongPreviewComponent {
   @Input() song: Song = new Song();
   @Input() currentBeat = 0;
   @Input() beatNumbers: number[] = [];
+  @Input() vocalists: Vocalist[] = [];
+  @Input() showVocalistSelector = false;
+  @Input() selectedVocalistId: number | null = null;
   @Output() tempoReset = new EventEmitter<void>();
   @Output() tempoTap = new EventEmitter<void>();
+  @Output() vocalistSelected = new EventEmitter<number | null>();
 
   currentIndex = 0;
   @ViewChild('partsContainer', { static: false })

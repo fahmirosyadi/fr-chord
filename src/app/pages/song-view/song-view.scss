@@ -4,6 +4,137 @@
   gap:20px;
 }
 
+.vocalist-load-error {
+  color: #b42318;
+}
+
+.range-popup {
+  position: fixed;
+  z-index: 1200;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(680px, calc(100vw - 24px));
+  padding: 14px 16px 16px;
+  border: 1px solid #d8dce3;
+  border-left: 5px solid #64748b;
+  border-radius: 8px;
+  background: white;
+  color: #1f2937;
+  box-shadow: 0 8px 28px rgb(15 23 42 / 22%);
+}
+
+.range-popup.range-fits {
+  border-left-color: #16a34a;
+}
+
+.range-popup.range-partial {
+  border-left-color: #f59e0b;
+}
+
+.range-popup.range-outside {
+  border-left-color: #dc2626;
+}
+
+.range-popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.range-popup-header strong {
+  font-size: 15px;
+}
+
+.range-popup-header p {
+  margin: 3px 0 0;
+  font-size: 13px;
+}
+
+.range-chart {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  gap: 8px 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.range-row {
+  display: contents;
+}
+
+.range-row-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.range-track {
+  position: relative;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: repeating-linear-gradient(
+    to right,
+    #e7eaf0 0,
+    #e7eaf0 calc(16.666% - 1px),
+    #cbd2dc calc(16.666% - 1px),
+    #cbd2dc 16.666%
+  );
+}
+
+.range-fill {
+  position: absolute;
+  top: 1px;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.vocalist-fill {
+  background: #3b82f6;
+}
+
+.song-fill.fit {
+  background: #16a34a;
+}
+
+.song-fill.partial {
+  background: #f59e0b;
+}
+
+.song-fill.outside {
+  background: #dc2626;
+}
+
+.range-row-notes {
+  min-width: 80px;
+  color: #475569;
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.range-invalid-message {
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+@media (max-width: 480px) {
+  .range-popup {
+    padding: 10px 12px 12px;
+  }
+
+  .range-chart {
+    grid-template-columns: 50px minmax(0, 1fr) auto;
+    gap: 8px 6px;
+  }
+
+  .range-row-notes {
+    min-width: 64px;
+    font-size: 11px;
+  }
+}
+
 .song-controls button.active{
   background:#ffd54f;
   color:black;

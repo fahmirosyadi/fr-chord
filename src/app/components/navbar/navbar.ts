@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   @Output() toggleSidenav = new EventEmitter<void>();
   isAuthenticated = false;
+  isAdmin = false;
 
   constructor(
     public themeService: ThemeService,
@@ -22,6 +23,7 @@ export class NavbarComponent {
     private router: Router
   ) {
     this.authService.isAuthenticated$.subscribe(value => this.isAuthenticated = value);
+    this.authService.isAdmin$.subscribe(value => this.isAdmin = value);
   }
 
   async onAuthAction() {

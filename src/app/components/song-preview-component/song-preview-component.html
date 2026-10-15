@@ -19,6 +19,19 @@
         <button mat-icon-button class="metronome-tap" aria-label="Tap tempo four times" (click)="tempoTap.emit()">TAP</button>
       </div>
     }
+    @if (showVocalistSelector && vocalists.length > 0) {
+      <mat-form-field appearance="outline" class="vocalist-select">
+        <mat-label>Compare with vocalist</mat-label>
+        <mat-select
+          [ngModel]="selectedVocalistId"
+          (selectionChange)="vocalistSelected.emit($event.value)">
+          <mat-option [value]="null">No vocalist selected</mat-option>
+          @for (vocalist of vocalists; track vocalist.id) {
+            <mat-option [value]="vocalist.id">{{ vocalist.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
   </div>
   <div class="song-title">{{ song.title }}</div>
   <div class="song-original-key">Original Key: {{ song.originalKey }}</div>

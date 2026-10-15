@@ -51,6 +51,9 @@
       <button mat-menu-item routerLink="/user">User</button>
       <button mat-menu-item routerLink="/genre">Genre</button>
       <button mat-menu-item routerLink="/song">Song</button>
+      @if (isAdmin) {
+        <button mat-menu-item routerLink="/vocalist">Vocalist</button>
+      }
     </mat-menu>
   </div>
 

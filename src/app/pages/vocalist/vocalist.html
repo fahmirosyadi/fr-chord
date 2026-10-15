@@ -1,0 +1,57 @@
+<div class="page vocalist-page">
+  <div class="header">
+    <h2>Vocalist Management</h2>
+    <button mat-flat-button color="primary" (click)="startNewVocalist()">
+      <mat-icon>add</mat-icon>
+      New Vocalist
+    </button>
+  </div>
+
+  <mat-card class="vocalist-form-card">
+    <h3>{{ editingId === null ? 'Add vocalist' : 'Edit vocalist' }}</h3>
+    <form class="vocalist-form" (ngSubmit)="saveVocalist()">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="name" name="name" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Bottom note</mat-label>
+        <input matInput [(ngModel)]="lowestNote" name="lowestNote" placeholder="e.g. C3" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Top note</mat-label>
+        <input matInput [(ngModel)]="highestNote" name="highestNote" placeholder="e.g. G5" required />
+      </mat-form-field>
+
+      <div class="form-actions">
+        @if (editingId !== null) {
+          <button mat-button type="button" (click)="cancelEdit()">Cancel</button>
+        }
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+          {{ saving ? 'Saving...' : editingId === null ? 'Add' : 'Save changes' }}
+        </button>
+      </div>
+    </form>
+
+    @if (errorMessage) {
+      <mat-error class="form-error">{{ errorMessage }}</mat-error>
+    }
+  </mat-card>
+
+  @if (loading && vocalists.length === 0) {
+    <mat-card class="list-message">Loading vocalists...</mat-card>
+  } @else if (!loading && filteredVocalists.length === 0) {
+    <mat-card class="list-message">No vocalists found.</mat-card>
+  } @else {
+    <app-data-table
+      [columns]="columns"
+      [data]="filteredVocalists"
+      [showActions]="true"
+      (search)="filterVocalists($event)"
+      (edit)="editVocalist($event)"
+      (delete)="deleteVocalist($event)">
+    </app-data-table>
+  }
+</div>

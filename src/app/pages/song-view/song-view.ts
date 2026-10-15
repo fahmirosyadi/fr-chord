@@ -8,6 +8,7 @@ import { PartPreviewComponent } from '../../components/part-preview-component/pa
 import { SongPreviewComponent } from "../../components/song-preview-component/song-preview-component";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Factory } from 'vexflow';
+import { Vocalist, VocalistService } from '../../services/vocalist-service';
 
 @Component({
   selector: 'app-song-view',
@@ -27,6 +28,10 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
   private metronomeTimer?: ReturnType<typeof setInterval>;
   private originalBpm: number | null = null;
   private tempoTapTimes: number[] = [];
+  vocalists: Vocalist[] = [];
+  selectedVocalistId: number | null = null;
+  showRangePopup = false;
+  vocalistLoadError = '';
 
   get hasMetronomeSettings(): boolean {
     return this.song?.bpm != null
@@ -53,7 +58,8 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
   constructor(
     private route: ActivatedRoute,
     private service: SongService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private vocalistService: VocalistService
   ) {}
 
   private startMetronome() {
@@ -174,7 +180,229 @@ export class SongView implements OnInit, OnChanges, OnDestroy  {
     }
 
     if (this.song) void this.startMetronome();
+    await this.loadVocalists();
 
+  }
+
+  private async loadVocalists() {
+    try {
+      this.vocalists = await this.vocalistService.getAll();
+    } catch {
+      this.vocalistLoadError = 'Could not load vocalists.';
+    }
+  }
+
+  onVocalistSelected(id: number | null) {
+    this.selectedVocalistId = id;
+    this.showRangePopup = id !== null;
+  }
+
+  get selectedVocalist(): Vocalist | undefined {
+    return this.vocalists.find(vocalist => vocalist.id === this.selectedVocalistId);
+  }
+
+  transposeSong(semitones: number) {
+    this.song.transpose(semitones);
+    if (this.selectedVocalist) this.showRangePopup = true;
+  }
+
+  get transpositionSemitones(): number {
+    const original = this.getPitchClass(this.song?.key ?? '');
+    const current = this.getPitchClass(this.song?.tmpCurrentKey ?? '');
+    if (original === null || current === null) return 0;
+
+    let offset = (current - original + 12) % 12;
+    if (offset > 6) offset -= 12;
+    return offset;
+  }
+
+  get vocalistRange() {
+    const vocalist = this.selectedVocalist;
+    if (!vocalist) return null;
+
+    return this.makeRange(vocalist.lowest_note, vocalist.highest_note, 0);
+  }
+
+  get songRange() {
+    const low = this.songNoteToMidi(this.song?.lowestNote);
+    const high = this.songNoteToMidi(this.song?.highestNote);
+    if (low === null || high === null || low > high) return null;
+
+    return {
+      low,
+      high,
+      lowLabel: this.midiToNote(low),
+      highLabel: this.midiToNote(high)
+    };
+  }
+
+  get songOctaveShift(): number {
+    const songRange = this.songRange;
+    const vocalistRange = this.vocalistRange;
+    if (!songRange || !vocalistRange) return 0;
+
+    let bestShift = 0;
+    let bestOverlap = -1;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (let shift = -8; shift <= 8; shift++) {
+      const low = songRange.low + shift * 12;
+      const high = songRange.high + shift * 12;
+      const fits = low >= vocalistRange.low && high <= vocalistRange.high;
+      const distance = Math.abs(shift);
+      const overlap = Math.max(
+        0,
+        Math.min(high, vocalistRange.high) - Math.max(low, vocalistRange.low) + 1
+      );
+
+      if (fits) {
+        if (bestOverlap !== Number.POSITIVE_INFINITY || distance < bestDistance) {
+          bestShift = shift;
+          bestOverlap = Number.POSITIVE_INFINITY;
+          bestDistance = distance;
+        }
+      } else if (bestOverlap !== Number.POSITIVE_INFINITY &&
+        (overlap > bestOverlap || (overlap === bestOverlap && distance < bestDistance))) {
+        bestShift = shift;
+        bestOverlap = overlap;
+        bestDistance = distance;
+      }
+    }
+
+    return bestShift;
+  }
+
+  get displaySongRange() {
+    const range = this.songRange;
+    if (!range) return null;
+
+    const shift = this.songOctaveShift * 12;
+    return {
+      low: range.low + shift,
+      high: range.high + shift,
+      lowLabel: this.midiToNote(range.low + shift),
+      highLabel: this.midiToNote(range.high + shift)
+    };
+  }
+
+  get rangeFit(): 'fits' | 'partial' | 'outside' | 'invalid' {
+    const songRange = this.displaySongRange;
+    const vocalistRange = this.vocalistRange;
+    if (!songRange || !vocalistRange) return 'invalid';
+    if (songRange.low >= vocalistRange.low && songRange.high <= vocalistRange.high) return 'fits';
+    if (songRange.high < vocalistRange.low || songRange.low > vocalistRange.high) return 'outside';
+    return 'partial';
+  }
+
+  get songRangeLabel(): string {
+    const range = this.displaySongRange;
+    return range ? `${range.lowLabel} – ${range.highLabel}` : '';
+  }
+
+  get rangeStatusMessage(): string {
+    if (this.rangeFit === 'invalid') return 'Range comparison needs valid note values';
+    if (this.rangeFit === 'fits') {
+      if (this.songOctaveShift === 0) return 'Song range fits this vocalist';
+      const direction = this.songOctaveShift < 0 ? 'lower' : 'higher';
+      const count = Math.abs(this.songOctaveShift);
+      return `Song range fits when sung ${count} octave${count === 1 ? '' : 's'} ${direction}`;
+    }
+
+    const status = this.rangeFit === 'partial'
+      ? 'Part of the song range is outside this vocalist range'
+      : 'Song range is outside this vocalist range';
+    if (this.songOctaveShift === 0) return status;
+
+    const direction = this.songOctaveShift < 0 ? 'lower' : 'higher';
+    const count = Math.abs(this.songOctaveShift);
+    return `${status}, even when sung ${count} octave${count === 1 ? '' : 's'} ${direction}`;
+  }
+
+  get vocalistRangeLabel(): string {
+    const range = this.vocalistRange;
+    return range ? `${range.lowLabel} – ${range.highLabel}` : '';
+  }
+
+  rangeBarStyle(range: { low: number; high: number } | null) {
+    if (!range) return {};
+    const min = 24; // C1
+    const max = 96; // C7
+    const span = max - min;
+    const left = Math.max(0, Math.min(100, ((range.low - min) / span) * 100));
+    const right = Math.max(0, Math.min(100, ((range.high - min) / span) * 100));
+    return {
+      left: `${left}%`,
+      width: `${Math.max(1, right - left)}%`
+    };
+  }
+
+  private makeRange(lowNote: string | null | undefined, highNote: string | null | undefined, offset: number) {
+    const low = this.noteToMidi(lowNote);
+    const high = this.noteToMidi(highNote);
+    if (low === null || high === null || low > high) return null;
+
+    return {
+      low: low + offset,
+      high: high + offset,
+      lowLabel: this.midiToNote(low + offset),
+      highLabel: this.midiToNote(high + offset)
+    };
+  }
+
+  private songNoteToMidi(note?: string | null): number | null {
+    if (!note) return null;
+
+    const degreeMatch = note.trim().match(/^([1-7])([#b]?)\((-?\d+)\)$/);
+    if (degreeMatch) {
+      const keyPitch = this.getPitchClass(this.song?.key ?? '');
+      if (keyPitch === null) return null;
+
+      const scaleDegrees = [0, 2, 4, 5, 7, 9, 11];
+      const degree = Number(degreeMatch[1]) - 1;
+      let semitones = scaleDegrees[degree];
+      if (degreeMatch[2] === '#') semitones += 1;
+      if (degreeMatch[2] === 'b') semitones -= 1;
+
+      const octave = Number(degreeMatch[3]);
+      const originalPitch = (octave + 1) * 12 + keyPitch + semitones;
+      return originalPitch + this.transpositionSemitones;
+    }
+
+    // Continue to accept absolute pitches for songs entered before degree notation.
+    const absolutePitch = this.noteToMidi(note);
+    return absolutePitch === null ? null : absolutePitch + this.transpositionSemitones;
+  }
+
+  private noteToMidi(note?: string | null): number | null {
+    if (!note) return null;
+    const match = note.trim().match(/^([A-Ga-g])([#b]?)(-?\d+)$/);
+    if (!match) return null;
+
+    const semitoneByLetter: Record<string, number> = {
+      C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11
+    };
+    let pitch = semitoneByLetter[match[1].toUpperCase()];
+    if (match[2] === '#') pitch += 1;
+    if (match[2] === 'b') pitch -= 1;
+    return (Number(match[3]) + 1) * 12 + pitch;
+  }
+
+  private midiToNote(midi: number): string {
+    const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const normalized = ((midi % 12) + 12) % 12;
+    return `${noteNames[normalized]}${Math.floor(midi / 12) - 1}`;
+  }
+
+  private getPitchClass(key: string): number | null {
+    const match = key.trim().match(/^([A-Ga-g])([#b]?)$/);
+    if (!match) return null;
+    const pitchClass: Record<string, number> = {
+      C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11
+    };
+    let pitch = pitchClass[match[1].toUpperCase()];
+    if (match[2] === '#') pitch += 1;
+    if (match[2] === 'b') pitch -= 1;
+    return ((pitch % 12) + 12) % 12;
   }
 
   setYoutubeUrl() {
